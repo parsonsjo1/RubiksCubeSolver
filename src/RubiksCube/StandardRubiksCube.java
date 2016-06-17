@@ -7,7 +7,7 @@ package RubiksCube;
  * @author Joshua Parsons
  * 
  */
-public class RubiksCube 
+public class StandardRubiksCube implements RubiksCubeInterface
 {
 	private RubiksCubeFace frontFace;
 	private RubiksCubeFace backFace;
@@ -16,7 +16,7 @@ public class RubiksCube
 	private RubiksCubeFace bottomFace;
 	private RubiksCubeFace topFace;
 	
-	public RubiksCube()
+	public StandardRubiksCube()
 	{
 		
 	}
