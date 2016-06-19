@@ -18,4 +18,8 @@ public class RubiksCubeTile
 		
 	}
 	
+	public TileColor getTileColor()
+	{
+		return this.tileColor;
+	}
 }
