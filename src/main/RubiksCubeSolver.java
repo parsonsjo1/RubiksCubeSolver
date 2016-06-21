@@ -21,19 +21,14 @@ public class RubiksCubeSolver
 	public static void main(String[] args) 
 	{
 		//Create rubiks cube object
-		RubiksCubeInterface rubiksCube = new StandardRubiksCube();
+		RubiksCubeInterface rubiksCube = new StandardRubiksCube(3);
 		
 		rubiksCube.displayRubiksCube();
 		//Prompt user for input
 		
 		//Display rubiks cube and reprompt
+		
 
-		try 
-		{
-			System.in.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

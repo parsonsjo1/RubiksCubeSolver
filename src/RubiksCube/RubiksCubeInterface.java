@@ -16,5 +16,4 @@ public interface RubiksCubeInterface
 	public void solveRubiksCube();
 	
 	public void displayRubiksCube();
-	
 }
