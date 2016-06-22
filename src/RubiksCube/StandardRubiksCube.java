@@ -26,16 +26,35 @@ public class StandardRubiksCube implements RubiksCubeInterface
 		
 	}
 	
+	/**
+	 * Set Rubiks cube back to inital state
+	 */
 	@Override
 	public void resetRubiksCube()
 	{
-		
+		setFaces(3);
 	}
 	
 	@Override
 	public void solveRubiksCube()
 	{
 		
+	}
+	
+	public void rotateRight(FaceName faceName, int row)
+	{
+		RubiksCubeFace face = rubiksCubeFaces.get(faceName);
+		
+		//Get faces
+		
+		face.getRow(row);
+	}
+	
+	public void rotateLeft(FaceName faceName, int row)
+	{
+		RubiksCubeFace face = rubiksCubeFaces.get(faceName);
+		
+		face.getRow(row);
 	}
 
 	/**

@@ -16,11 +16,11 @@ public class RubiksCubeFace
 	{
 		StringBuilder faceSB = new StringBuilder();
 		
-		for(int row = 0; row < faceTiles.length; row++)
+		for(int row = 0; row < this.faceTiles.length; row++)
 		{
-			for(int col = 0; col < faceTiles.length; col++)
+			for(int col = 0; col < this.faceTiles.length; col++)
 			{
-				faceSB.append(faceTiles[row][col].getTileColor() + " ");
+				faceSB.append(this.faceTiles[row][col].getTileColor() + " ");
 			}
 			if(row != 2)
 				faceSB.append("\n");
@@ -51,6 +51,9 @@ public class RubiksCubeFace
 		this.faceName = faceName;
 	}
 	
+	/**
+	 * @return the faceName
+	 */
 	public FaceName getFaceName()
 	{
 		return this.faceName;
@@ -61,6 +64,38 @@ public class RubiksCubeFace
 	 */
 	public RubiksCubeTile[][] getFaceTiles() 
 	{
-		return faceTiles;
+		return this.faceTiles;
+	}
+	
+	/**
+	 * @param row
+	 * @return
+	 */
+	public RubiksCubeTile[] getRow(int row)
+	{
+		RubiksCubeTile[] rowSet = new RubiksCubeTile[this.faceTiles.length];
+		
+		for(int col = 0; col < this.faceTiles.length; col++)
+		{
+			rowSet[col] = this.faceTiles[row][col];
+		}
+		
+		return rowSet;
+	}
+	
+	/**
+	 * @param col
+	 * @return
+	 */
+	public RubiksCubeTile[] getCol(int col)
+	{
+		RubiksCubeTile[] colSet = new RubiksCubeTile[this.faceTiles.length];
+		
+		for(int row = 0; row < this.faceTiles.length; row++)
+		{
+			colSet[row] = this.faceTiles[row][col];
+		}
+		
+		return colSet;
 	}
 }
