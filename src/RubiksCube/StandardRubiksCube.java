@@ -62,6 +62,21 @@ public class StandardRubiksCube implements RubiksCubeInterface
 			
 			face = this.rubiksCubeFaces.get(face.getAdjacentFace(Direction.RIGHT));
 		}
+		
+		//Rotate top
+		if(row == 0)
+		{
+			FaceName faceTopName = face.getAdjacentFace(Direction.UP);
+			RubiksCubeFace faceTop = this.rubiksCubeFaces.get(faceTopName);
+			
+			faceTop.rotateRight();
+		}
+		
+		//Rotate bottom
+		if(row == 2)
+		{
+			
+		}
 	}
 	
 	public void rotateLeft(FaceName faceName, int row)
@@ -76,7 +91,7 @@ public class StandardRubiksCube implements RubiksCubeInterface
 	 * @param row
 	 * @return Map<FaceName, RubiksCubeTile[]>
 	 */
-	public Map<FaceName, RubiksCubeTile[]> collectRows(RubiksCubeFace face, int row)
+	private Map<FaceName, RubiksCubeTile[]> collectRows(RubiksCubeFace face, int row)
 	{
 		Map<FaceName, RubiksCubeTile[]> collectedRows = new EnumMap<FaceName, RubiksCubeTile[]>(FaceName.class);
 
