@@ -16,4 +16,6 @@ public interface RubiksCubeInterface
 	public void solveRubiksCube();
 	
 	public void displayRubiksCube();
+	
+	public void rotateRight(FaceName faceName, int row);
 }

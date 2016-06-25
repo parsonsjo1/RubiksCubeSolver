@@ -5,6 +5,7 @@ package main;
 
 import java.io.IOException;
 
+import RubiksCube.FaceName;
 import RubiksCube.RubiksCubeInterface;
 import RubiksCube.StandardRubiksCube;
 
@@ -22,6 +23,12 @@ public class RubiksCubeSolver
 	{
 		//Create rubiks cube object
 		RubiksCubeInterface rubiksCube = new StandardRubiksCube(3);
+		
+		rubiksCube.displayRubiksCube();
+		
+		rubiksCube.rotateRight(FaceName.FRONT, 0);
+		
+		System.out.println();
 		
 		rubiksCube.displayRubiksCube();
 		//Prompt user for input

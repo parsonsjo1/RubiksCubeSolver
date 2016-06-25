@@ -41,20 +41,51 @@ public class StandardRubiksCube implements RubiksCubeInterface
 		
 	}
 	
+	/*Wrapper*/
 	public void rotateRight(FaceName faceName, int row)
 	{
-		RubiksCubeFace face = rubiksCubeFaces.get(faceName);
+		final int ROTATIONS = 4;
 		
-		//Get faces
+		RubiksCubeFace face = this.rubiksCubeFaces.get(faceName);
+		rotateRight(face, row, ROTATIONS);
+	}
+	
+	private void rotateRight(RubiksCubeFace face, int row, int rotationCount)
+	{	
+		Map<FaceName, RubiksCubeTile[]> collectedRows = this.collectRows(face, row);
 		
-		face.getRow(row);
+		for(int i = 0; i < 4; i++)
+		{
+			FaceName faceLeftName = face.getAdjacentFace(Direction.LEFT);
+
+			face.setFaceRow(row, collectedRows.get(faceLeftName));
+			
+			face = this.rubiksCubeFaces.get(face.getAdjacentFace(Direction.RIGHT));
+		}
 	}
 	
 	public void rotateLeft(FaceName faceName, int row)
 	{
 		RubiksCubeFace face = rubiksCubeFaces.get(faceName);
 		
-		face.getRow(row);
+		face.getFaceRow(row);
+	}
+	
+	/**
+	 * @param faceName
+	 * @param row
+	 * @return Map<FaceName, RubiksCubeTile[]>
+	 */
+	public Map<FaceName, RubiksCubeTile[]> collectRows(RubiksCubeFace face, int row)
+	{
+		Map<FaceName, RubiksCubeTile[]> collectedRows = new EnumMap<FaceName, RubiksCubeTile[]>(FaceName.class);
+
+		for(int i = 0; i < 4; i++)
+		{
+			collectedRows.put(face.getFaceName(), face.getFaceRow(row));
+			face = this.rubiksCubeFaces.get(face.getAdjacentFace(Direction.RIGHT));
+		}
+		return collectedRows;
 	}
 
 	/**
