@@ -1,8 +1,12 @@
-package RubiksCube;
+package rubikscube;
 
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * The faces of a Rubiks Cube
+ * @author Joshua Parsons
+ */
 public class RubiksCubeFace 
 {
 	private FaceName faceName;
@@ -14,9 +18,9 @@ public class RubiksCubeFace
 	 * @param size
 	 * @param faceName
 	 */
-	public RubiksCubeFace(int size, FaceName faceName)
+	public RubiksCubeFace(int numRows, int numCols, FaceName faceName)
 	{
-		setFaceTiles(size);
+		setFaceTiles(3);
 		setFaceName(faceName);
 		setAdjacentFaces(faceName);
 	}
@@ -225,9 +229,9 @@ public class RubiksCubeFace
 		case BOTTOM:
 		{
 			this.adjacentFaces.put(Direction.UP, FaceName.FRONT);
-			this.adjacentFaces.put(Direction.RIGHT, FaceName.RIGHT);
+			this.adjacentFaces.put(Direction.RIGHT, FaceName.LEFT);
 			this.adjacentFaces.put(Direction.DOWN, FaceName.BACK);
-			this.adjacentFaces.put(Direction.LEFT, FaceName.LEFT);
+			this.adjacentFaces.put(Direction.LEFT, FaceName.RIGHT);
 			break;
 		}
 		}

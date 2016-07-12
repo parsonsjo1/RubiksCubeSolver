@@ -1,7 +1,7 @@
 /**
  * 
  */
-package RubiksCube;
+package rubikscube;
 
 /**
  * @author Joshua Parsons

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package RubiksCube;
+package rubikscube;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -10,16 +10,21 @@ import java.util.Map;
  * @author Joshua Parsons
  * 
  */
-public class StandardRubiksCube implements RubiksCubeInterface
+public class RubiksCubeThree implements RubiksCubeInterface
 {
 	private Map<FaceName, RubiksCubeFace> rubiksCubeFaces;
-	private final int NUM_FACES = 6;
 	
-	public StandardRubiksCube(int size)
+	/**
+	 * Default Constructor
+	 */
+	public RubiksCubeThree()
 	{
-		setFaces(size);
+		setRubiksCubeFaces(new EnumMap<FaceName, RubiksCubeFace>(FaceName.class));
 	}
 
+	/**
+	 * Shuffle the rubiks cube
+	 */
 	@Override
 	public void shuffleRubiksCube()
 	{
@@ -27,80 +32,33 @@ public class StandardRubiksCube implements RubiksCubeInterface
 	}
 	
 	/**
-	 * Set Rubiks cube back to inital state
+	 * Reset the rubiks cube
 	 */
 	@Override
 	public void resetRubiksCube()
 	{
-		setFaces(3);
+		setRubiksCubeFaces(new EnumMap<FaceName, RubiksCubeFace>(FaceName.class));
 	}
 	
+	/**
+	 * Solve the rubiks cube
+	 */
 	@Override
 	public void solveRubiksCube()
 	{
 		
 	}
 	
-	/*Wrapper*/
-	public void rotateRight(FaceName faceName, int row)
-	{
-		final int ROTATIONS = 4;
-		
-		RubiksCubeFace face = this.rubiksCubeFaces.get(faceName);
-		rotateRight(face, row, ROTATIONS);
-	}
-	
-	private void rotateRight(RubiksCubeFace face, int row, int rotationCount)
+	@Override
+	public void rotateClockwise(FaceName faceName, int row)
 	{	
-		Map<FaceName, RubiksCubeTile[]> collectedRows = this.collectRows(face, row);
-		
-		for(int i = 0; i < 4; i++)
-		{
-			FaceName faceLeftName = face.getAdjacentFace(Direction.LEFT);
 
-			face.setFaceRow(row, collectedRows.get(faceLeftName));
-			
-			face = this.rubiksCubeFaces.get(face.getAdjacentFace(Direction.RIGHT));
-		}
-		
-		//Rotate top
-		if(row == 0)
-		{
-			FaceName faceTopName = face.getAdjacentFace(Direction.UP);
-			RubiksCubeFace faceTop = this.rubiksCubeFaces.get(faceTopName);
-			
-			faceTop.rotateRight();
-		}
-		
-		//Rotate bottom
-		if(row == 2)
-		{
-			
-		}
 	}
 	
-	public void rotateLeft(FaceName faceName, int row)
+	@Override
+	public void rotateCounterClockwise(FaceName faceName, int row)
 	{
-		RubiksCubeFace face = rubiksCubeFaces.get(faceName);
-		
-		face.getFaceRow(row);
-	}
-	
-	/**
-	 * @param faceName
-	 * @param row
-	 * @return Map<FaceName, RubiksCubeTile[]>
-	 */
-	private Map<FaceName, RubiksCubeTile[]> collectRows(RubiksCubeFace face, int row)
-	{
-		Map<FaceName, RubiksCubeTile[]> collectedRows = new EnumMap<FaceName, RubiksCubeTile[]>(FaceName.class);
 
-		for(int i = 0; i < 4; i++)
-		{
-			collectedRows.put(face.getFaceName(), face.getFaceRow(row));
-			face = this.rubiksCubeFaces.get(face.getAdjacentFace(Direction.RIGHT));
-		}
-		return collectedRows;
 	}
 
 	/**
@@ -178,13 +136,16 @@ public class StandardRubiksCube implements RubiksCubeInterface
 	}
 	
 	
-	public void setFaces(int size)
+	public void setRubiksCubeFaces(EnumMap<FaceName, RubiksCubeFace> facesEnumMap)
 	{
-		this.rubiksCubeFaces = new EnumMap<FaceName, RubiksCubeFace>(FaceName.class);
-
+		this.rubiksCubeFaces = facesEnumMap;
+		
+		final int numRows = 3;
+		final int numCols = 3;
+		
 		for(FaceName faceName : FaceName.values())
 		{
-			this.rubiksCubeFaces.put(faceName, new RubiksCubeFace(size, faceName));
+			this.rubiksCubeFaces.put(faceName, new RubiksCubeFace(numRows, numCols, faceName));
 		}
 	}
 }

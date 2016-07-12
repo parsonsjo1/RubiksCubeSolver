@@ -1,7 +1,7 @@
 /**
  * 
  */
-package RubiksCube;
+package rubikscube;
 
 /**
  * @author Joshua Parsons
@@ -9,6 +9,8 @@ package RubiksCube;
  */
 public interface RubiksCubeInterface 
 {	
+	public final int NUM_FACES = 6;
+	
 	public void shuffleRubiksCube();
 	
 	public void resetRubiksCube();
@@ -17,5 +19,7 @@ public interface RubiksCubeInterface
 	
 	public void displayRubiksCube();
 	
-	public void rotateRight(FaceName faceName, int row);
+	public void rotateClockwise(FaceName faceName, int row);
+	
+	public void rotateCounterClockwise(FaceName faceName, int row);
 }

@@ -1,4 +1,4 @@
-package RubiksCube;
+package rubikscube;
 
 public enum FaceName 
 {

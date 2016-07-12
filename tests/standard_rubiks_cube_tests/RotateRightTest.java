@@ -9,9 +9,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import RubiksCube.FaceName;
-import RubiksCube.RubiksCubeInterface;
-import RubiksCube.StandardRubiksCube;
+import rubikscube.FaceName;
+import rubikscube.RubiksCubeInterface;
+import rubikscube.RubiksCubeThree;
 
 /**
  * @author Joshua Parsons
@@ -27,7 +27,7 @@ public class RotateRightTest
 	@Before
 	public void setUp() throws Exception 
 	{
-		rubiksCube = new StandardRubiksCube(3);
+		rubiksCube = new RubiksCubeThree(3);
 	}
 
 	/**
