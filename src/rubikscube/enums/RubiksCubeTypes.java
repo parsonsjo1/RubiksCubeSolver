@@ -1,4 +1,4 @@
-package rubikscube;
+package rubikscube.enums;
 
 /**
  * @author Joshua Parsons

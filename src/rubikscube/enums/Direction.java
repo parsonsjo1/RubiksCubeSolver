@@ -1,4 +1,4 @@
-package rubikscube;
+package rubikscube.enums;
 
 public enum Direction 
 {

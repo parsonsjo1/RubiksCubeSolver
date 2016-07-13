@@ -1,10 +1,14 @@
 /**
  * 
  */
-package rubikscube;
+package rubikscube.three;
 
 import java.util.EnumMap;
 import java.util.Map;
+
+import rubikscube.RubiksCubeInterface;
+import rubikscube.enums.FaceName;
+import rubikscube.enums.TileColor;
 
 /**
  * @author Joshua Parsons
@@ -19,7 +23,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public RubiksCubeThree()
 	{
-		setRubiksCubeFaces(new EnumMap<FaceName, RubiksCubeFace>(FaceName.class));
+		setRubiksCubeFaces();
 	}
 
 	/**
@@ -37,7 +41,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	@Override
 	public void resetRubiksCube()
 	{
-		setRubiksCubeFaces(new EnumMap<FaceName, RubiksCubeFace>(FaceName.class));
+		setRubiksCubeFaces();
 	}
 	
 	/**
@@ -60,6 +64,21 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	{
 
 	}
+	
+	public void setRubiksCubeFaces()
+	{
+		this.rubiksCubeFaces = new EnumMap<FaceName, RubiksCubeFace>(FaceName.class);
+		
+		final int numRows = 3;
+		final int numCols = 3;
+		
+		for(int i = 0; i < FaceName.values().length; i++)
+		{
+			FaceName faceName = FaceName.values()[i];
+			TileColor tileColor = TileColor.values()[i];
+			this.rubiksCubeFaces.put(faceName, new RubiksCubeFace(numRows, numCols, faceName, tileColor));
+		}
+	}
 
 	/**
 	 * Format and print the rubiks cube out to the console
@@ -71,8 +90,8 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		RubiksCubeFace topFace = rubiksCubeFaces.get(FaceName.TOP);
 		RubiksCubeTile[][] topFaceTiles = topFace.getFaceTiles();
 		
-		int numRows = topFace.getFaceTiles().length;
-		int numCols = topFace.getFaceTiles().length;
+		final int numRows = topFace.getFaceTiles().length;
+		final int numCols = topFace.getFaceTiles().length;
 		
 		for(int row = 0; row < numRows; row++)
 		{
@@ -132,20 +151,6 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				System.out.printf("%-10s", bottomFaceTiles[row][col].getTileColor());
 			}
 			System.out.println();
-		}
-	}
-	
-	
-	public void setRubiksCubeFaces(EnumMap<FaceName, RubiksCubeFace> facesEnumMap)
-	{
-		this.rubiksCubeFaces = facesEnumMap;
-		
-		final int numRows = 3;
-		final int numCols = 3;
-		
-		for(FaceName faceName : FaceName.values())
-		{
-			this.rubiksCubeFaces.put(faceName, new RubiksCubeFace(numRows, numCols, faceName));
 		}
 	}
 }

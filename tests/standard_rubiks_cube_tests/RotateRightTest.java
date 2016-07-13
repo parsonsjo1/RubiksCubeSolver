@@ -9,9 +9,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import rubikscube.FaceName;
 import rubikscube.RubiksCubeInterface;
-import rubikscube.RubiksCubeThree;
+import rubikscube.enums.FaceName;
+import rubikscube.three.RubiksCubeThree;
 
 /**
  * @author Joshua Parsons

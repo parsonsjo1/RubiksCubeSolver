@@ -9,11 +9,11 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import rubikscube.FaceName;
 import rubikscube.RubiksCubeInterface;
-import rubikscube.RubiksCubeTypes;
-import rubikscube.RubiksCubeThree;
-import rubikscube_exceptions.InvalidInputException;
+import rubikscube.enums.FaceName;
+import rubikscube.enums.RubiksCubeTypes;
+import rubikscube.exceptions.InvalidInputException;
+import rubikscube.three.RubiksCubeThree;
 
 /**
  * @author Joshua Parsons
@@ -74,7 +74,6 @@ public class RubiksCubeSolver
 			try
 			{
 				String input = br.readLine();
-				System.out.println(input);
 				//Check the length users input
 				if(input.length() > numRubiksCubeTypes)
 				{

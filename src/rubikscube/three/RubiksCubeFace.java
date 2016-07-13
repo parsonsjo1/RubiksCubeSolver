@@ -1,7 +1,11 @@
-package rubikscube;
+package rubikscube.three;
 
 import java.util.EnumMap;
 import java.util.Map;
+
+import rubikscube.enums.Direction;
+import rubikscube.enums.FaceName;
+import rubikscube.enums.TileColor;
 
 /**
  * The faces of a Rubiks Cube
@@ -10,6 +14,8 @@ import java.util.Map;
 public class RubiksCubeFace 
 {
 	private FaceName faceName;
+	private int numRows;
+	private int numCols;
 	private RubiksCubeTile[][] faceTiles;
 	private Map<Direction, FaceName> adjacentFaces;
 	
@@ -18,85 +24,74 @@ public class RubiksCubeFace
 	 * @param size
 	 * @param faceName
 	 */
-	public RubiksCubeFace(int numRows, int numCols, FaceName faceName)
+	public RubiksCubeFace(int numRows, int numCols, FaceName faceName, TileColor tileColor)
 	{
-		setFaceTiles(3);
+		setNumRows(numRows);
+		setNumCols(numCols);
+		setFaceTiles(tileColor);
 		setFaceName(faceName);
-		setAdjacentFaces(faceName);
+		setAdjacentFaces();
 	}
+
 	
 	/**
-	 * Rotate the faces tiles around the center tile in rotation to the right
+	 * @return the faceTiles
 	 */
-	public void rotateRight()
+	public RubiksCubeTile[][] getFaceTiles() 
 	{
-		Map<Direction, RubiksCubeTile[]> collectedTiles = this.collectTiles();
-		
-		this.setFaceRow(0, collectedTiles.get(Direction.RIGHT));
-		this.setFaceRow(2, collectedTiles.get(Direction.LEFT));
-		
-		this.setFaceCol(0, collectedTiles.get(Direction.UP));
-		this.setFaceCol(2, collectedTiles.get(Direction.DOWN));
+		return this.faceTiles;
 	}
 	
-	/**
-	 * @param faceName
-	 * @param row
-	 * @return Map<FaceName, RubiksCubeTile[]>
-	 */
-	private Map<Direction, RubiksCubeTile[]> collectTiles()
-	{
-		Map<Direction, RubiksCubeTile[]> collectTiles = new EnumMap<Direction, RubiksCubeTile[]>(Direction.class);
-
-		collectTiles.put(Direction.UP, this.getFaceRow(0));
-		collectTiles.put(Direction.DOWN, this.getFaceRow(2));
-		
-		collectTiles.put(Direction.LEFT, this.getFaceCol(0));
-		collectTiles.put(Direction.RIGHT, this.getFaceCol(2));
-		
-		return collectTiles;
-	}
-	
-
-	@Override
-	public String toString()
-	{
-		StringBuilder faceSB = new StringBuilder();
-		
-		for(int row = 0; row < this.faceTiles.length; row++)
-		{
-			for(int col = 0; col < this.faceTiles.length; col++)
-			{
-				faceSB.append(this.faceTiles[row][col].getTileColor() + " ");
-			}
-			if(row != 2)
-				faceSB.append("\n");
-		}
-			
-		return faceSB.toString();
-	}
-
 	/**
 	 * 
 	 * @param size
 	 */
-	public void setFaceTiles(int size)
+	public void setFaceTiles(TileColor tileColor)
 	{
-		this.faceTiles = new RubiksCubeTile[size][size];
-		for(int row = 0; row < size; row++)
+		this.faceTiles = new RubiksCubeTile[numRows][numCols];
+		
+		for(int row = 0; row < numRows; row++)
 		{
-			for(int col = 0; col < size; col++)
+			for(int col = 0; col < numCols; col++)
 			{
-				TileColor defaultColor = TileColor.WHITE;
-				TileColor tileColor = defaultColor.getTileColor();
-				int tileNumber = tileColor.getTileNumber();
-				TileLocation defaultLocation = TileLocation.MIDDLE;
-				TileLocation tileLocation = defaultLocation.getTileLocation(row, col);
-				this.faceTiles[row][col] = new RubiksCubeTile(tileColor, tileNumber, tileLocation);
+				this.faceTiles[row][col] = new RubiksCubeTile(tileColor);
 			}
-		}
+		}	
 	}
-	
+
+
+	/**
+	 * @return the numRows
+	 */
+	public int getNumRows()
+	{
+		return numRows;
+	}
+
+	/**
+	 * @param numRows the numRows to set
+	 */
+	public void setNumRows(int numRows)
+	{
+		this.numRows = numRows;
+	}
+
+	/**
+	 * @return the numCols
+	 */
+	public int getNumCols()
+	{
+		return numCols;
+	}
+
+	/**
+	 * @param numCols the numCols to set
+	 */
+	public void setNumCols(int numCols)
+	{
+		this.numCols = numCols;
+	}
+
 	/**
 	 * 
 	 * @param faceName
@@ -112,14 +107,6 @@ public class RubiksCubeFace
 	public FaceName getFaceName()
 	{
 		return this.faceName;
-	}
-
-	/**
-	 * @return the faceTiles
-	 */
-	public RubiksCubeTile[][] getFaceTiles() 
-	{
-		return this.faceTiles;
 	}
 	
 	/**
@@ -162,7 +149,7 @@ public class RubiksCubeFace
 	
 	/**
 	 * @param col
-	 * @return
+	 * @return colSet
 	 */
 	public RubiksCubeTile[] getFaceCol(int col)
 	{
@@ -177,14 +164,24 @@ public class RubiksCubeFace
 	}
 	
 	/**
+	 * Return the adjacent face that is adjacent in the direction specified in the parameter
+	 * @param direction
+	 * @return FaceName
+	 */
+	public FaceName getAdjacentFace(Direction direction)
+	{
+		return this.adjacentFaces.get(direction);
+	}
+	
+	/**
 	 * Set adjacent faces for the current face
 	 * @param faceName
 	 */
-	private void setAdjacentFaces(FaceName faceName)
+	private void setAdjacentFaces()
 	{
 		this.adjacentFaces = new EnumMap<Direction, FaceName>(Direction.class);
 		
-		switch(faceName)
+		switch(this.faceName)
 		{
 		case FRONT:
 		{
@@ -237,13 +234,21 @@ public class RubiksCubeFace
 		}
 	}
 	
-	/**
-	 * Return the adjacent face that is adjacent in the direction specified in the parameter
-	 * @param direction
-	 * @return FaceName
-	 */
-	public FaceName getAdjacentFace(Direction direction)
+	@Override
+	public String toString()
 	{
-		return this.adjacentFaces.get(direction);
+		StringBuilder faceSB = new StringBuilder();
+		
+		for(int row = 0; row < this.numRows; row++)
+		{
+			for(int col = 0; col < this.numCols; col++)
+			{
+				faceSB.append(this.faceTiles[row][col].getTileColor() + " ");
+			}
+			if(row != 2)
+				faceSB.append("\n");
+		}
+			
+		return faceSB.toString();
 	}
 }

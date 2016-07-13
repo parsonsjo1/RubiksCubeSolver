@@ -1,7 +1,7 @@
 /**
  * 
  */
-package rubikscube_exceptions;
+package rubikscube.exceptions;
 
 /**
  * @author Joshua Parsons

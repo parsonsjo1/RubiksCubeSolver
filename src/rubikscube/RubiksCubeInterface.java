@@ -3,6 +3,8 @@
  */
 package rubikscube;
 
+import rubikscube.enums.FaceName;
+
 /**
  * @author Joshua Parsons
  * 
