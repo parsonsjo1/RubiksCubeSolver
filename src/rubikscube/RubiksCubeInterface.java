@@ -21,7 +21,11 @@ public interface RubiksCubeInterface
 	
 	public void displayRubiksCube();
 	
-	public void rotateClockwise(FaceName faceName, int row);
+	public void rotateRowClockwise(FaceName faceName, int row);
 	
-	public void rotateCounterClockwise(FaceName faceName, int row);
+	public void rotateRowCounterClockwise(FaceName faceName, int row);
+	
+	public void rotateColClockwise(FaceName faceName, int col);
+	
+	public void rotateColCounterClockwise(FaceName faceName, int col);
 }

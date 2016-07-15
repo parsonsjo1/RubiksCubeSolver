@@ -54,13 +54,34 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	}
 	
 	@Override
-	public void rotateClockwise(FaceName faceName, int row)
+	public void rotateRowClockwise(FaceName faceName, int row)
 	{	
+		RubiksCubeFace face = this.rubiksCubeFaces.get(faceName);
+		
+		if(faceName == FaceName.TOP || faceName == FaceName.BOTTOM)
+		{
+			
+		}
+		else
+		{
+			
+		}
+	}
+	
+	@Override
+	public void rotateRowCounterClockwise(FaceName faceName, int row)
+	{
 
 	}
 	
 	@Override
-	public void rotateCounterClockwise(FaceName faceName, int row)
+	public void rotateColClockwise(FaceName faceName, int col)
+	{	
+		
+	}
+	
+	@Override
+	public void rotateColCounterClockwise(FaceName faceName, int col)
 	{
 
 	}
