@@ -7,6 +7,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import rubikscube.RubiksCubeInterface;
+import rubikscube.enums.Direction;
 import rubikscube.enums.FaceName;
 import rubikscube.enums.TileColor;
 
@@ -56,15 +57,17 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	@Override
 	public void rotateRowClockwise(FaceName faceName, int row)
 	{	
-		RubiksCubeFace face = this.rubiksCubeFaces.get(faceName);
+		RubiksCubeFace currentFace = this.rubiksCubeFaces.get(faceName);
+		RubiksCubeTile[] currentRowTiles = currentFace.getFaceRow(row);
 		
-		if(faceName == FaceName.TOP || faceName == FaceName.BOTTOM)
+		for(FaceName nextFaceName : currentFace.getRotationMap(Direction.RIGHT))
 		{
+			RubiksCubeFace nextFace = this.rubiksCubeFaces.get(nextFaceName);
+			RubiksCubeTile[] nextRowTiles = nextFace.getFaceRow(row);
 			
-		}
-		else
-		{
+			nextFace.setFaceRow(row, currentRowTiles);
 			
+			currentRowTiles = nextRowTiles;
 		}
 	}
 	

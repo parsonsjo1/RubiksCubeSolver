@@ -169,7 +169,7 @@ public class RubiksCubeFace
 	 * @param direction
 	 * @return FaceName
 	 */
-	public List<FaceName> getAdjacentFace(Direction direction)
+	public List<FaceName> getRotationMap(Direction direction)
 	{
 		return this.rotationMap.get(direction);
 	}
@@ -185,6 +185,14 @@ public class RubiksCubeFace
 		ArrayList<FaceName> rotateRightList = new ArrayList<FaceName>();
 		ArrayList<FaceName> rotateDownList = new ArrayList<FaceName>();
 		ArrayList<FaceName> rotateLeftList = new ArrayList<FaceName>();
+		
+		for(int i = 0; i < 4; i++)
+		{
+			rotateUpList.add(i, FaceName.TOP);
+			rotateRightList.add(i, FaceName.RIGHT);
+			rotateDownList.add(i, FaceName.BOTTOM);	
+			rotateLeftList.add(i, FaceName.LEFT);
+		}
 		
 		switch(this.faceName)
 		{

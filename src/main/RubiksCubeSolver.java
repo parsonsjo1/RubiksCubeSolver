@@ -27,7 +27,8 @@ public class RubiksCubeSolver
 	public static void main(String[] args) 
 	{		
 		//Get the users selected option
-		int selectedOption = getUserSelection();
+		//int selectedOption = getUserSelection();
+		int selectedOption = 1;
 		
 		//Create rubiks cube object
 		RubiksCubeInterface rubiksCube = null;
@@ -41,11 +42,23 @@ public class RubiksCubeSolver
 		
 		rubiksCube.displayRubiksCube();
 		
-		//rubiksCube.rotateRight(FaceName.TOP, 0);
+		rubiksCube.rotateRowClockwise(FaceName.FRONT, 0);
 		
-		//System.out.println();
+		System.out.println();
 		
-		//rubiksCube.displayRubiksCube();
+		rubiksCube.displayRubiksCube();
+		
+		rubiksCube.rotateRowClockwise(FaceName.FRONT, 1);
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		rubiksCube.rotateRowClockwise(FaceName.FRONT, 2);
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
 		
 		//Prompt user for input
 		
