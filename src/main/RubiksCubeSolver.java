@@ -42,19 +42,79 @@ public class RubiksCubeSolver
 		
 		rubiksCube.displayRubiksCube();
 		
-		rubiksCube.rotateRowClockwise(FaceName.FRONT, 0);
+		//TOP
+		rubiksCube.rotateTopClockwise();
 		
 		System.out.println();
 		
 		rubiksCube.displayRubiksCube();
 		
-		rubiksCube.rotateRowClockwise(FaceName.FRONT, 1);
+		rubiksCube.rotateTopCounterClockwise();
 		
 		System.out.println();
 		
 		rubiksCube.displayRubiksCube();
 		
-		rubiksCube.rotateRowClockwise(FaceName.FRONT, 2);
+		//LEFT
+		rubiksCube.rotateLeftClockwise();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		rubiksCube.rotateLeftCounterClockwise();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		//FRONT
+		rubiksCube.rotateFrontClockwise();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		rubiksCube.rotateFrontCounterClockwise();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		//RIGHT
+		rubiksCube.rotateRightClockwise();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		rubiksCube.rotateRightCounterClockwise();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		//BACK
+		rubiksCube.rotateBackClockwise();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		rubiksCube.rotateBackCounterClockwise();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		//BOTTOM
+		rubiksCube.rotateBottomClockwise();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
+		rubiksCube.rotateBottomCounterClockwise();
 		
 		System.out.println();
 		

@@ -32,7 +32,39 @@ public class RubiksCubeFace
 		setNumCols(numCols);
 		setFaceTiles(tileColor);
 		setFaceName(faceName);
-		setRotationMap();
+		//setRotationMap();
+	}
+	
+	/**
+	 * Rotate the face tiles in the clockwise direction
+	 */
+	public void rotateTilesClockwise()
+	{
+		RubiksCubeTile[] topTileSet = this.getFaceRow(0);
+		RubiksCubeTile[] leftTileSet = this.getFaceCol(0);
+		RubiksCubeTile[] bottomTileSet = this.getFaceRow(2);
+		RubiksCubeTile[] rightTileSet = this.getFaceCol(2);
+		
+		this.setFaceRow(0, leftTileSet);
+		this.setFaceCol(0, bottomTileSet);
+		this.setFaceRow(2, rightTileSet);
+		this.setFaceCol(2, topTileSet);		
+	}
+	
+	/**
+	 * Rotate the face tiles in the counterclockwise direction
+	 */
+	public void rotateTilesCounterClockwise()
+	{
+		RubiksCubeTile[] topTileSet = this.getFaceRow(0);
+		RubiksCubeTile[] leftTileSet = this.getFaceCol(0);
+		RubiksCubeTile[] bottomTileSet = this.getFaceRow(2);
+		RubiksCubeTile[] rightTileSet = this.getFaceCol(2);
+		
+		this.setFaceRow(0, rightTileSet);
+		this.setFaceCol(0, topTileSet);
+		this.setFaceRow(2, leftTileSet);
+		this.setFaceCol(2, bottomTileSet);
 	}
 	
 	/**
@@ -174,198 +206,198 @@ public class RubiksCubeFace
 		return this.rotationMap.get(direction);
 	}
 	
-	/**
-	 * Set adjacent faces for the current face
-	 * @param faceName
-	 */
-	private void setRotationMap()
-	{
-		this.rotationMap = new EnumMap<Direction, List<FaceName>>(Direction.class);
-		ArrayList<FaceName> rotateUpList = new ArrayList<FaceName>();
-		ArrayList<FaceName> rotateRightList = new ArrayList<FaceName>();
-		ArrayList<FaceName> rotateDownList = new ArrayList<FaceName>();
-		ArrayList<FaceName> rotateLeftList = new ArrayList<FaceName>();
-		
-		for(int i = 0; i < 4; i++)
-		{
-			rotateUpList.add(i, FaceName.TOP);
-			rotateRightList.add(i, FaceName.RIGHT);
-			rotateDownList.add(i, FaceName.BOTTOM);	
-			rotateLeftList.add(i, FaceName.LEFT);
-		}
-		
-		switch(this.faceName)
-		{
-			case FRONT:
-			{
-				rotateUpList.set(0, FaceName.TOP);
-				rotateUpList.set(1, FaceName.BACK);
-				rotateUpList.set(2, FaceName.BOTTOM);
-				rotateUpList.set(3, FaceName.FRONT);
-				
-				rotateRightList.set(0, FaceName.RIGHT);
-				rotateRightList.set(1, FaceName.BACK);
-				rotateRightList.set(2, FaceName.LEFT);
-				rotateRightList.set(3, FaceName.FRONT);
-				
-				rotateDownList.set(0, FaceName.BOTTOM);
-				rotateDownList.set(1, FaceName.BACK);
-				rotateDownList.set(2, FaceName.TOP);
-				rotateDownList.set(3, FaceName.FRONT);
-				
-				rotateLeftList.set(0, FaceName.LEFT);
-				rotateLeftList.set(1, FaceName.BACK);
-				rotateLeftList.set(2, FaceName.RIGHT);
-				rotateLeftList.set(3, FaceName.FRONT);
-				
-				this.rotationMap.put(Direction.UP, rotateUpList);
-				this.rotationMap.put(Direction.RIGHT, rotateRightList);
-				this.rotationMap.put(Direction.DOWN, rotateDownList);
-				this.rotationMap.put(Direction.LEFT, rotateLeftList);
-				break;
-			}
-			case BACK:
-			{
-				rotateUpList.set(0, FaceName.TOP);
-				rotateUpList.set(1, FaceName.FRONT);
-				rotateUpList.set(2, FaceName.BOTTOM);
-				rotateUpList.set(3, FaceName.BACK);
-				
-				rotateRightList.set(0, FaceName.LEFT);
-				rotateRightList.set(1, FaceName.FRONT);
-				rotateRightList.set(2, FaceName.LEFT);
-				rotateRightList.set(3, FaceName.BACK);
-				
-				rotateDownList.set(0, FaceName.BOTTOM);
-				rotateDownList.set(1, FaceName.FRONT);
-				rotateDownList.set(2, FaceName.TOP);
-				rotateDownList.set(3, FaceName.BACK);
-				
-				rotateLeftList.set(0, FaceName.RIGHT);
-				rotateLeftList.set(1, FaceName.FRONT);
-				rotateLeftList.set(2, FaceName.LEFT);
-				rotateLeftList.set(3, FaceName.BACK);
-				
-				this.rotationMap.put(Direction.UP, rotateUpList);
-				this.rotationMap.put(Direction.RIGHT, rotateRightList);
-				this.rotationMap.put(Direction.DOWN, rotateDownList);
-				this.rotationMap.put(Direction.LEFT, rotateLeftList);
-				break;
-			}
-			case LEFT:
-			{
-				rotateUpList.set(0, FaceName.TOP);
-				rotateUpList.set(1, FaceName.RIGHT);
-				rotateUpList.set(2, FaceName.BOTTOM);
-				rotateUpList.set(3, FaceName.LEFT);
-				
-				rotateRightList.set(0, FaceName.FRONT);
-				rotateRightList.set(1, FaceName.RIGHT);
-				rotateRightList.set(2, FaceName.BACK);
-				rotateRightList.set(3, FaceName.LEFT);
-				
-				rotateDownList.set(0, FaceName.BOTTOM);
-				rotateDownList.set(1, FaceName.RIGHT);
-				rotateDownList.set(2, FaceName.TOP);
-				rotateDownList.set(3, FaceName.LEFT);
-				
-				rotateLeftList.set(0, FaceName.BACK);
-				rotateLeftList.set(1, FaceName.RIGHT);
-				rotateLeftList.set(2, FaceName.FRONT);
-				rotateLeftList.set(3, FaceName.LEFT);
-				
-				this.rotationMap.put(Direction.UP, rotateUpList);
-				this.rotationMap.put(Direction.RIGHT, rotateRightList);
-				this.rotationMap.put(Direction.DOWN, rotateDownList);
-				this.rotationMap.put(Direction.LEFT, rotateLeftList);
-				break;
-			}
-			case RIGHT:
-			{
-				rotateUpList.set(0, FaceName.TOP);
-				rotateUpList.set(1, FaceName.LEFT);
-				rotateUpList.set(2, FaceName.BOTTOM);
-				rotateUpList.set(3, FaceName.RIGHT);
-				
-				rotateRightList.set(0, FaceName.BACK);
-				rotateRightList.set(1, FaceName.LEFT);
-				rotateRightList.set(2, FaceName.FRONT);
-				rotateRightList.set(3, FaceName.RIGHT);
-				
-				rotateDownList.set(0, FaceName.BOTTOM);
-				rotateDownList.set(1, FaceName.LEFT);
-				rotateDownList.set(2, FaceName.TOP);
-				rotateDownList.set(3, FaceName.RIGHT);
-				
-				rotateLeftList.set(0, FaceName.FRONT);
-				rotateLeftList.set(1, FaceName.LEFT);
-				rotateLeftList.set(2, FaceName.BACK);
-				rotateLeftList.set(3, FaceName.RIGHT);
-				
-				this.rotationMap.put(Direction.UP, rotateUpList);
-				this.rotationMap.put(Direction.RIGHT, rotateRightList);
-				this.rotationMap.put(Direction.DOWN, rotateDownList);
-				this.rotationMap.put(Direction.LEFT, rotateLeftList);
-				break;
-			}
-			case TOP:
-			{
-				rotateUpList.set(0, FaceName.BACK);
-				rotateUpList.set(1, FaceName.BOTTOM);
-				rotateUpList.set(2, FaceName.FRONT);
-				rotateUpList.set(3, FaceName.TOP);
-				
-				rotateRightList.set(0, FaceName.RIGHT);
-				rotateRightList.set(1, FaceName.BOTTOM);
-				rotateRightList.set(2, FaceName.LEFT);
-				rotateRightList.set(3, FaceName.TOP);
-				
-				rotateDownList.set(0, FaceName.FRONT);
-				rotateDownList.set(1, FaceName.BOTTOM);
-				rotateDownList.set(2, FaceName.BACK);
-				rotateDownList.set(3, FaceName.TOP);
-				
-				rotateLeftList.set(0, FaceName.LEFT);
-				rotateLeftList.set(1, FaceName.BOTTOM);
-				rotateLeftList.set(2, FaceName.RIGHT);
-				rotateLeftList.set(3, FaceName.TOP);
-				
-				this.rotationMap.put(Direction.UP, rotateUpList);
-				this.rotationMap.put(Direction.RIGHT, rotateRightList);
-				this.rotationMap.put(Direction.DOWN, rotateDownList);
-				this.rotationMap.put(Direction.LEFT, rotateLeftList);
-				break;
-			}
-			case BOTTOM:
-			{
-				rotateUpList.set(0, FaceName.FRONT);
-				rotateUpList.set(1, FaceName.TOP);
-				rotateUpList.set(2, FaceName.BACK);
-				rotateUpList.set(3, FaceName.BOTTOM);
-				
-				rotateRightList.set(0, FaceName.RIGHT);
-				rotateRightList.set(1, FaceName.TOP);
-				rotateRightList.set(2, FaceName.LEFT);
-				rotateRightList.set(3, FaceName.BOTTOM);
-				
-				rotateDownList.set(0, FaceName.BACK);
-				rotateDownList.set(1, FaceName.TOP);
-				rotateDownList.set(2, FaceName.FRONT);
-				rotateDownList.set(3, FaceName.BOTTOM);
-				
-				rotateLeftList.set(0, FaceName.LEFT);
-				rotateLeftList.set(1, FaceName.TOP);
-				rotateLeftList.set(2, FaceName.RIGHT);
-				rotateLeftList.set(3, FaceName.BOTTOM);
-				
-				this.rotationMap.put(Direction.UP, rotateUpList);
-				this.rotationMap.put(Direction.RIGHT, rotateRightList);
-				this.rotationMap.put(Direction.DOWN, rotateDownList);
-				this.rotationMap.put(Direction.LEFT, rotateLeftList);
-				break;
-			}
-		}
-	}
+//	/**
+//	 * Set adjacent faces for the current face
+//	 * @param faceName
+//	 */
+//	private void setRotationMap()
+//	{
+//		this.rotationMap = new EnumMap<Direction, List<FaceName>>(Direction.class);
+//		ArrayList<FaceName> rotateUpList = new ArrayList<FaceName>();
+//		ArrayList<FaceName> rotateRightList = new ArrayList<FaceName>();
+//		ArrayList<FaceName> rotateDownList = new ArrayList<FaceName>();
+//		ArrayList<FaceName> rotateLeftList = new ArrayList<FaceName>();
+//		
+//		for(int i = 0; i < 4; i++)
+//		{
+//			rotateUpList.add(i, FaceName.TOP);
+//			rotateRightList.add(i, FaceName.RIGHT);
+//			rotateDownList.add(i, FaceName.BOTTOM);	
+//			rotateLeftList.add(i, FaceName.LEFT);
+//		}
+//		
+//		switch(this.faceName)
+//		{
+//			case FRONT:
+//			{
+//				rotateUpList.set(0, FaceName.TOP);
+//				rotateUpList.set(1, FaceName.BACK);
+//				rotateUpList.set(2, FaceName.BOTTOM);
+//				rotateUpList.set(3, FaceName.FRONT);
+//				
+//				rotateRightList.set(0, FaceName.RIGHT);
+//				rotateRightList.set(1, FaceName.BACK);
+//				rotateRightList.set(2, FaceName.LEFT);
+//				rotateRightList.set(3, FaceName.FRONT);
+//				
+//				rotateDownList.set(0, FaceName.BOTTOM);
+//				rotateDownList.set(1, FaceName.BACK);
+//				rotateDownList.set(2, FaceName.TOP);
+//				rotateDownList.set(3, FaceName.FRONT);
+//				
+//				rotateLeftList.set(0, FaceName.LEFT);
+//				rotateLeftList.set(1, FaceName.BACK);
+//				rotateLeftList.set(2, FaceName.RIGHT);
+//				rotateLeftList.set(3, FaceName.FRONT);
+//				
+//				this.rotationMap.put(Direction.UP, rotateUpList);
+//				this.rotationMap.put(Direction.RIGHT, rotateRightList);
+//				this.rotationMap.put(Direction.DOWN, rotateDownList);
+//				this.rotationMap.put(Direction.LEFT, rotateLeftList);
+//				break;
+//			}
+//			case BACK:
+//			{
+//				rotateUpList.set(0, FaceName.TOP);
+//				rotateUpList.set(1, FaceName.FRONT);
+//				rotateUpList.set(2, FaceName.BOTTOM);
+//				rotateUpList.set(3, FaceName.BACK);
+//				
+//				rotateRightList.set(0, FaceName.LEFT);
+//				rotateRightList.set(1, FaceName.FRONT);
+//				rotateRightList.set(2, FaceName.LEFT);
+//				rotateRightList.set(3, FaceName.BACK);
+//				
+//				rotateDownList.set(0, FaceName.BOTTOM);
+//				rotateDownList.set(1, FaceName.FRONT);
+//				rotateDownList.set(2, FaceName.TOP);
+//				rotateDownList.set(3, FaceName.BACK);
+//				
+//				rotateLeftList.set(0, FaceName.RIGHT);
+//				rotateLeftList.set(1, FaceName.FRONT);
+//				rotateLeftList.set(2, FaceName.LEFT);
+//				rotateLeftList.set(3, FaceName.BACK);
+//				
+//				this.rotationMap.put(Direction.UP, rotateUpList);
+//				this.rotationMap.put(Direction.RIGHT, rotateRightList);
+//				this.rotationMap.put(Direction.DOWN, rotateDownList);
+//				this.rotationMap.put(Direction.LEFT, rotateLeftList);
+//				break;
+//			}
+//			case LEFT:
+//			{
+//				rotateUpList.set(0, FaceName.TOP);
+//				rotateUpList.set(1, FaceName.RIGHT);
+//				rotateUpList.set(2, FaceName.BOTTOM);
+//				rotateUpList.set(3, FaceName.LEFT);
+//				
+//				rotateRightList.set(0, FaceName.FRONT);
+//				rotateRightList.set(1, FaceName.RIGHT);
+//				rotateRightList.set(2, FaceName.BACK);
+//				rotateRightList.set(3, FaceName.LEFT);
+//				
+//				rotateDownList.set(0, FaceName.BOTTOM);
+//				rotateDownList.set(1, FaceName.RIGHT);
+//				rotateDownList.set(2, FaceName.TOP);
+//				rotateDownList.set(3, FaceName.LEFT);
+//				
+//				rotateLeftList.set(0, FaceName.BACK);
+//				rotateLeftList.set(1, FaceName.RIGHT);
+//				rotateLeftList.set(2, FaceName.FRONT);
+//				rotateLeftList.set(3, FaceName.LEFT);
+//				
+//				this.rotationMap.put(Direction.UP, rotateUpList);
+//				this.rotationMap.put(Direction.RIGHT, rotateRightList);
+//				this.rotationMap.put(Direction.DOWN, rotateDownList);
+//				this.rotationMap.put(Direction.LEFT, rotateLeftList);
+//				break;
+//			}
+//			case RIGHT:
+//			{
+//				rotateUpList.set(0, FaceName.TOP);
+//				rotateUpList.set(1, FaceName.LEFT);
+//				rotateUpList.set(2, FaceName.BOTTOM);
+//				rotateUpList.set(3, FaceName.RIGHT);
+//				
+//				rotateRightList.set(0, FaceName.BACK);
+//				rotateRightList.set(1, FaceName.LEFT);
+//				rotateRightList.set(2, FaceName.FRONT);
+//				rotateRightList.set(3, FaceName.RIGHT);
+//				
+//				rotateDownList.set(0, FaceName.BOTTOM);
+//				rotateDownList.set(1, FaceName.LEFT);
+//				rotateDownList.set(2, FaceName.TOP);
+//				rotateDownList.set(3, FaceName.RIGHT);
+//				
+//				rotateLeftList.set(0, FaceName.FRONT);
+//				rotateLeftList.set(1, FaceName.LEFT);
+//				rotateLeftList.set(2, FaceName.BACK);
+//				rotateLeftList.set(3, FaceName.RIGHT);
+//				
+//				this.rotationMap.put(Direction.UP, rotateUpList);
+//				this.rotationMap.put(Direction.RIGHT, rotateRightList);
+//				this.rotationMap.put(Direction.DOWN, rotateDownList);
+//				this.rotationMap.put(Direction.LEFT, rotateLeftList);
+//				break;
+//			}
+//			case TOP:
+//			{
+//				rotateUpList.set(0, FaceName.BACK);
+//				rotateUpList.set(1, FaceName.BOTTOM);
+//				rotateUpList.set(2, FaceName.FRONT);
+//				rotateUpList.set(3, FaceName.TOP);
+//				
+//				rotateRightList.set(0, FaceName.RIGHT);
+//				rotateRightList.set(1, FaceName.BOTTOM);
+//				rotateRightList.set(2, FaceName.LEFT);
+//				rotateRightList.set(3, FaceName.TOP);
+//				
+//				rotateDownList.set(0, FaceName.FRONT);
+//				rotateDownList.set(1, FaceName.BOTTOM);
+//				rotateDownList.set(2, FaceName.BACK);
+//				rotateDownList.set(3, FaceName.TOP);
+//				
+//				rotateLeftList.set(0, FaceName.LEFT);
+//				rotateLeftList.set(1, FaceName.BOTTOM);
+//				rotateLeftList.set(2, FaceName.RIGHT);
+//				rotateLeftList.set(3, FaceName.TOP);
+//				
+//				this.rotationMap.put(Direction.UP, rotateUpList);
+//				this.rotationMap.put(Direction.RIGHT, rotateRightList);
+//				this.rotationMap.put(Direction.DOWN, rotateDownList);
+//				this.rotationMap.put(Direction.LEFT, rotateLeftList);
+//				break;
+//			}
+//			case BOTTOM:
+//			{
+//				rotateUpList.set(0, FaceName.FRONT);
+//				rotateUpList.set(1, FaceName.TOP);
+//				rotateUpList.set(2, FaceName.BACK);
+//				rotateUpList.set(3, FaceName.BOTTOM);
+//				
+//				rotateRightList.set(0, FaceName.RIGHT);
+//				rotateRightList.set(1, FaceName.TOP);
+//				rotateRightList.set(2, FaceName.LEFT);
+//				rotateRightList.set(3, FaceName.BOTTOM);
+//				
+//				rotateDownList.set(0, FaceName.BACK);
+//				rotateDownList.set(1, FaceName.TOP);
+//				rotateDownList.set(2, FaceName.FRONT);
+//				rotateDownList.set(3, FaceName.BOTTOM);
+//				
+//				rotateLeftList.set(0, FaceName.LEFT);
+//				rotateLeftList.set(1, FaceName.TOP);
+//				rotateLeftList.set(2, FaceName.RIGHT);
+//				rotateLeftList.set(3, FaceName.BOTTOM);
+//				
+//				this.rotationMap.put(Direction.UP, rotateUpList);
+//				this.rotationMap.put(Direction.RIGHT, rotateRightList);
+//				this.rotationMap.put(Direction.DOWN, rotateDownList);
+//				this.rotationMap.put(Direction.LEFT, rotateLeftList);
+//				break;
+//			}
+//		}
+//	}
 	
 	@Override
 	public String toString()
