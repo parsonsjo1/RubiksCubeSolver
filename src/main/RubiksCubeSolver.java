@@ -39,7 +39,10 @@ public class RubiksCubeSolver
 				rubiksCube = new RubiksCubeThree();
 			}
 		}
+
+		rubiksCube.shuffleRubiksCube();
 		
+		rubiksCube.displayRubiksCube();
 		
 		//Prompt user for input
 		

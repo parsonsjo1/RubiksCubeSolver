@@ -5,6 +5,7 @@ package rubikscube.three;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Random;
 
 import rubikscube.RubiksCubeInterface;
 import rubikscube.enums.FaceName;
@@ -59,7 +60,82 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	@Override
 	public void shuffleRubiksCube()
 	{
-		
+		for(int i = 0; i < 100; i++)
+		{
+			Random random = new Random();
+			int rotateMethod = random.nextInt(NUM_FACES);
+			//Invert every other
+			if(i % 2 == 0)
+				rotateMethod *= -1;
+			
+			switch(rotateMethod)
+			{
+				case 1:
+				{
+					this.rotateTopClockwise();
+					break;
+				}
+				case -1:
+				{
+					this.rotateTopCounterClockwise();
+					break;
+				}
+				case 2:
+				{
+					this.rotateLeftClockwise();
+					break;
+				}
+				case -2:
+				{
+					this.rotateLeftCounterClockwise();
+					break;
+				}
+				case 3:
+				{
+					this.rotateFrontClockwise();
+					break;
+				}
+				case -3:
+				{
+					this.rotateFrontCounterClockwise();
+					break;
+				}
+				case 4:
+				{
+					this.rotateRightClockwise();
+					break;
+				}
+				case -4:
+				{
+					this.rotateRightCounterClockwise();
+					break;
+				}
+				case 5:
+				{
+					this.rotateBackClockwise();
+					break;
+				}
+				case -5:
+				{
+					this.rotateBackCounterClockwise();
+					break;
+				}
+				case 6:
+				{
+					this.rotateBottomClockwise();
+					break;
+				}
+				case -6:
+				{
+					this.rotateBottomCounterClockwise();
+					break;
+				}
+				default:
+				{
+					continue;
+				}
+			}
+		}
 	}
 	
 	/**
@@ -76,6 +152,15 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	@Override
 	public void solveRubiksCube()
+	{
+		//Step 1
+		this.solveWhiteCross();
+	}
+	
+	/**
+	 * 
+	 */
+	private void solveWhiteCross()
 	{
 		
 	}

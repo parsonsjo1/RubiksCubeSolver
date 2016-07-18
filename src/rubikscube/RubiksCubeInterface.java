@@ -9,6 +9,8 @@ package rubikscube;
  */
 public interface RubiksCubeInterface 
 {	
+	public final int NUM_FACES = 6;
+	
 	public void shuffleRubiksCube();
 	
 	public void resetRubiksCube();
