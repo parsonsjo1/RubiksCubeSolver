@@ -10,6 +10,7 @@ import java.util.Random;
 import rubikscube.RubiksCubeInterface;
 import rubikscube.enums.FaceName;
 import rubikscube.enums.TileColor;
+import rubikscube.enums.TileLocation;
 
 /**
  * @author Joshua Parsons
@@ -17,14 +18,15 @@ import rubikscube.enums.TileColor;
  */
 public class RubiksCubeThree implements RubiksCubeInterface
 {
+	private Map<FaceName, RubiksCubeTile[]> tileSets;
+	private RubiksCubeFace[] faces;
+	
 	private RubiksCubeFace topFace;
 	private RubiksCubeFace leftFace;
 	private RubiksCubeFace frontFace;
 	private RubiksCubeFace rightFace;
 	private RubiksCubeFace backFace;
 	private RubiksCubeFace bottomFace;
-	
-	private Map<FaceName, RubiksCubeTile[]> tileSets;
 	
 	private final int numRows =  3;
 	private final int numCols = 3;
@@ -34,24 +36,26 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public RubiksCubeThree()
 	{
+		setTileSets(new EnumMap<FaceName, RubiksCubeTile[]>(FaceName.class));
+		setFaces(new RubiksCubeFace[NUM_FACES]);
 		setTopFace(new RubiksCubeFace(numRows, numCols, FaceName.TOP, TileColor.WHITE));
 		setLeftFace(new RubiksCubeFace(numRows, numCols, FaceName.LEFT, TileColor.ORANGE));
 		setFrontFace(new RubiksCubeFace(numRows, numCols, FaceName.FRONT, TileColor.GREEN));
 		setRightFace(new RubiksCubeFace(numRows, numCols, FaceName.RIGHT, TileColor.RED));
 		setBackFace(new RubiksCubeFace(numRows, numCols, FaceName.BACK, TileColor.BLUE));
 		setBottomFace(new RubiksCubeFace(numRows, numCols, FaceName.BOTTOM, TileColor.YELLOW));
-		setTileSets();
 	}
 	
 	public RubiksCubeThree(TileColor topFaceColor, TileColor leftFaceColor, TileColor frontFaceColor, TileColor rightFaceColor, TileColor backFaceColor, TileColor bottomFaceColor)
 	{
+		setTileSets(new EnumMap<FaceName, RubiksCubeTile[]>(FaceName.class));
+		setFaces(new RubiksCubeFace[NUM_FACES]);
 		setTopFace(new RubiksCubeFace(numRows, numCols, FaceName.TOP, topFaceColor));
 		setLeftFace(new RubiksCubeFace(numRows, numCols, FaceName.LEFT, leftFaceColor));
 		setFrontFace(new RubiksCubeFace(numRows, numCols, FaceName.FRONT, frontFaceColor));
 		setRightFace(new RubiksCubeFace(numRows, numCols, FaceName.RIGHT, rightFaceColor));
 		setBackFace(new RubiksCubeFace(numRows, numCols, FaceName.BACK, backFaceColor));
 		setBottomFace(new RubiksCubeFace(numRows, numCols, FaceName.BOTTOM, bottomFaceColor));
-		setTileSets();
 	}
 
 	/**
@@ -163,6 +167,239 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	private void solveWhiteCross()
 	{
 		
+//		if(bottomFace.getEdgeTiles(TileLocation.TOP).getTileColor() == TileColor.WHITE &&
+//		   bottomFace.getEdgeTiles(TileLocation.LEFT).getTileColor() == TileColor.WHITE &&
+//		   bottomFace.getEdgeTiles(TileLocation.BOTTOM).getTileColor() == TileColor.WHITE &&
+//		   bottomFace.getEdgeTiles(TileLocation.RIGHT).getTileColor() == TileColor.WHITE)
+//		{
+//			return;
+//		}
+		for(RubiksCubeFace face : this.faces)
+		{
+			if(bottomFace.isWhiteTile(TileLocation.TOP_EDGE))
+				break;
+			else
+				solveWhiteCrossTop(face);
+		}
+		solveWhiteCrossLeft();
+		solveWhiteCrossBottom();
+		solveWhiteCrossRight();
+	}
+	
+	private boolean solveWhiteCrossTop(RubiksCubeFace face)
+	{	
+		
+		TileLocation tileLocation = face.findWhiteEdge();
+		
+		if(tileLocation == null)
+			return false;
+		
+		switch(tileLocation)
+		{
+			case TOP_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateFrontClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateFrontClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case BOTTOM_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateFrontClockwise();
+					this.rotateFrontClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBackClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();					
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateFrontClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateLeftCounterClockwise();
+					this.rotateFrontCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateRightClockwise();
+					this.rotateFrontClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case LEFT_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateFrontClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case RIGHT_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateLeftCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateFrontCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+		default:
+			break;
+		}
+		return false;
+	}
+	
+	private void solveWhiteCrossLeft()
+	{
+		
+	}
+	
+	private void solveWhiteCrossBottom()
+	{
+		
+	}
+	
+	private void solveWhiteCrossRight()
+	{
+		
 	}
 	
 	/**
@@ -232,7 +469,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	{	
 		int col = 0;
 		
-		leftFace.rotateTilesClockwise();
+		leftFace.rotateTilesCounterClockwise();
 		
 		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(col));
 		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(col));
@@ -278,7 +515,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		int bottomRow = 0;
 		int leftCol = 2;
 		
-		frontFace.rotateTilesClockwise();
+		frontFace.rotateTilesCounterClockwise();
 		
 		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow));
 		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol));
@@ -318,7 +555,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	{	
 		int col = 2;
 		
-		rightFace.rotateTilesClockwise();
+		rightFace.rotateTilesCounterClockwise();
 		
 		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(col));
 		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(col));
@@ -364,7 +601,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		int bottomRow = 2;
 		int leftCol = 0;
 		
-		backFace.rotateTilesClockwise();
+		backFace.rotateTilesCounterClockwise();
 		
 		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow));
 		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol));
@@ -405,7 +642,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	{	
 		int row = 2;
 		
-		bottomFace.rotateTilesClockwise();
+		bottomFace.rotateTilesCounterClockwise();
 		
 		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row));
 		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row));
@@ -416,6 +653,16 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		rightFace.setFaceRow(row, this.tileSets.get(FaceName.BACK));
 		backFace.setFaceRow(row, this.tileSets.get(FaceName.LEFT));
 		leftFace.setFaceRow(row, this.tileSets.get(FaceName.FRONT));
+	}
+	
+	private void setTileSets(EnumMap<FaceName, RubiksCubeTile[]> tileSets)
+	{
+		this.tileSets = tileSets;
+	}
+	
+	private void setFaces(RubiksCubeFace[] faces)
+	{
+		this.faces = faces;
 	}
 	
 	/**
@@ -431,6 +678,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void setTopFace(RubiksCubeFace topFace)
 	{
+		this.faces[0] = topFace;
 		this.topFace = topFace;
 	}
 
@@ -447,6 +695,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void setLeftFace(RubiksCubeFace leftFace)
 	{
+		this.faces[1] = leftFace;
 		this.leftFace = leftFace;
 	}
 
@@ -463,6 +712,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void setFrontFace(RubiksCubeFace frontFace)
 	{
+		this.faces[2] = frontFace;
 		this.frontFace = frontFace;
 	}
 
@@ -479,6 +729,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void setRightFace(RubiksCubeFace rightFace)
 	{
+		this.faces[3] = rightFace;
 		this.rightFace = rightFace;
 	}
 
@@ -495,6 +746,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void setBackFace(RubiksCubeFace backFace)
 	{
+		this.faces[4] = backFace;
 		this.backFace = backFace;
 	}
 
@@ -511,12 +763,8 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void setBottomFace(RubiksCubeFace bottomFace)
 	{
+		this.faces[5] = bottomFace;
 		this.bottomFace = bottomFace;
-	}
-	
-	public void setTileSets()
-	{
-		this.tileSets = new EnumMap<FaceName, RubiksCubeTile[]>(FaceName.class);
 	}
 
 	/**

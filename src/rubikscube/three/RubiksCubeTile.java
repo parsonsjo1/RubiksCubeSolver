@@ -12,9 +12,7 @@ import rubikscube.enums.TileColor;
 public class RubiksCubeTile 
 {
 	private TileColor tileColor;
-	private int row;
-	private int col;
-	
+
 	public RubiksCubeTile(TileColor tileColor)
 	{
 		setTileColor(tileColor);

@@ -44,6 +44,12 @@ public class RubiksCubeSolver
 		
 		rubiksCube.displayRubiksCube();
 		
+		rubiksCube.solveRubiksCube();
+		
+		System.out.println();
+		
+		rubiksCube.displayRubiksCube();
+		
 		//Prompt user for input
 		
 		//Display rubiks cube and reprompt

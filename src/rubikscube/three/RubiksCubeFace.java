@@ -8,6 +8,7 @@ import java.util.Map;
 import rubikscube.enums.Direction;
 import rubikscube.enums.FaceName;
 import rubikscube.enums.TileColor;
+import rubikscube.enums.TileLocation;
 
 /**
  * The faces of a Rubiks Cube
@@ -19,6 +20,7 @@ public class RubiksCubeFace
 	private int numRows;
 	private int numCols;
 	private RubiksCubeTile[][] faceTiles;
+	private Map<TileLocation, RubiksCubeTile> faceTilesMap;
 	private Map<Direction, List<FaceName>> rotationMap;
 	
 	/**
@@ -28,11 +30,34 @@ public class RubiksCubeFace
 	 */
 	public RubiksCubeFace(int numRows, int numCols, FaceName faceName, TileColor tileColor)
 	{
+		setFaceName(faceName);
 		setNumRows(numRows);
 		setNumCols(numCols);
 		setFaceTiles(tileColor);
-		setFaceName(faceName);
+		setFaceTilesMap(new EnumMap<TileLocation, RubiksCubeTile>(TileLocation.class));
 		//setRotationMap();
+	}
+	
+	public TileLocation findWhiteEdge()
+	{
+		if(this.isWhiteTile(TileLocation.TOP_EDGE))
+			return TileLocation.TOP_EDGE;
+		if(this.isWhiteTile(TileLocation.LEFT_EDGE))
+			return TileLocation.LEFT_EDGE;
+		if(this.isWhiteTile(TileLocation.BOTTOM_EDGE))
+			return TileLocation.BOTTOM_EDGE;
+		if(this.isWhiteTile(TileLocation.RIGHT_EDGE))
+			return TileLocation.RIGHT_EDGE;
+		
+		return null;
+	}
+	
+	public boolean isWhiteTile(TileLocation tileLocation)
+	{
+		if(this.faceTilesMap.get(tileLocation).getTileColor() == TileColor.WHITE)
+			return true;
+		else
+			return false;
 	}
 	
 	/**
@@ -40,15 +65,25 @@ public class RubiksCubeFace
 	 */
 	public void rotateTilesClockwise()
 	{
-		RubiksCubeTile[] topTileSet = this.getFaceRow(0);
-		RubiksCubeTile[] leftTileSet = this.getFaceCol(0);
-		RubiksCubeTile[] bottomTileSet = this.getFaceRow(2);
-		RubiksCubeTile[] rightTileSet = this.getFaceCol(2);
+		RubiksCubeTile topLeftCorner = this.faceTiles[0][0];
+		RubiksCubeTile topEdge = this.faceTiles[0][1];
+		RubiksCubeTile topRightCorner = this.faceTiles[0][2];
+		RubiksCubeTile rightEdge = this.faceTiles[1][2];
+		RubiksCubeTile bottomRightCorner = this.faceTiles[2][2];
+		RubiksCubeTile bottomEdge = this.faceTiles[2][1];
+		RubiksCubeTile bottomLeftCorner = this.faceTiles[2][0];
+		RubiksCubeTile leftEdge = this.faceTiles[1][0];
 		
-		this.setFaceRow(0, leftTileSet);
-		this.setFaceCol(0, bottomTileSet);
-		this.setFaceRow(2, rightTileSet);
-		this.setFaceCol(2, topTileSet);		
+		this.faceTiles[0][0] = bottomLeftCorner;
+		this.faceTiles[0][1] = leftEdge;
+		this.faceTiles[0][2] = topLeftCorner;
+		this.faceTiles[1][2] = topEdge;
+		this.faceTiles[2][2] = topRightCorner;
+		this.faceTiles[2][1] = rightEdge;
+		this.faceTiles[2][0] = bottomRightCorner;
+		this.faceTiles[1][0] = bottomEdge;
+		
+		setFaceTilesMap();
 	}
 	
 	/**
@@ -56,15 +91,33 @@ public class RubiksCubeFace
 	 */
 	public void rotateTilesCounterClockwise()
 	{
-		RubiksCubeTile[] topTileSet = this.getFaceRow(0);
-		RubiksCubeTile[] leftTileSet = this.getFaceCol(0);
-		RubiksCubeTile[] bottomTileSet = this.getFaceRow(2);
-		RubiksCubeTile[] rightTileSet = this.getFaceCol(2);
+		RubiksCubeTile topLeftCorner = this.faceTiles[0][0];
+		RubiksCubeTile topEdge = this.faceTiles[0][1];
+		RubiksCubeTile topRightCorner = this.faceTiles[0][2];
+		RubiksCubeTile rightEdge = this.faceTiles[1][2];
+		RubiksCubeTile bottomRightCorner = this.faceTiles[2][2];
+		RubiksCubeTile bottomEdge = this.faceTiles[2][1];
+		RubiksCubeTile bottomLeftCorner = this.faceTiles[2][0];
+		RubiksCubeTile leftEdge = this.faceTiles[1][0];
 		
-		this.setFaceRow(0, rightTileSet);
-		this.setFaceCol(0, topTileSet);
-		this.setFaceRow(2, leftTileSet);
-		this.setFaceCol(2, bottomTileSet);
+		this.faceTiles[0][0] = topRightCorner;
+		this.faceTiles[0][1] = rightEdge;
+		this.faceTiles[0][2] = bottomRightCorner;
+		this.faceTiles[1][2] = bottomEdge;
+		this.faceTiles[2][2] = bottomLeftCorner;
+		this.faceTiles[2][1] = leftEdge;
+		this.faceTiles[2][0] = topLeftCorner;
+		this.faceTiles[1][0] = topEdge;
+		
+		setFaceTilesMap();
+	}
+	
+	/*
+	 * Return the requested face tile
+	 */
+	public RubiksCubeTile getFaceTile(int row, int col)
+	{
+		return this.faceTiles[row][col];
 	}
 	
 	/**
@@ -87,103 +140,42 @@ public class RubiksCubeFace
 		{
 			for(int col = 0; col < numCols; col++)
 			{
-				this.faceTiles[row][col] = new RubiksCubeTile(tileColor);
+				RubiksCubeTile currentTile = new RubiksCubeTile(tileColor);				
+				this.faceTiles[row][col] = currentTile;
 			}
 		}	
 	}
 
-
-	/**
-	 * @return the numRows
-	 */
 	public int getNumRows()
 	{
 		return numRows;
 	}
 
-	/**
-	 * @param numRows the numRows to set
-	 */
 	public void setNumRows(int numRows)
 	{
 		this.numRows = numRows;
 	}
 
-	/**
-	 * @return the numCols
-	 */
 	public int getNumCols()
 	{
 		return numCols;
 	}
 
-	/**
-	 * @param numCols the numCols to set
-	 */
 	public void setNumCols(int numCols)
 	{
 		this.numCols = numCols;
 	}
 
-	/**
-	 * 
-	 * @param faceName
-	 */
 	public void setFaceName(FaceName faceName)
 	{
 		this.faceName = faceName;
 	}
 	
-	/**
-	 * @return the faceName
-	 */
 	public FaceName getFaceName()
 	{
 		return this.faceName;
 	}
 	
-	/**
-	 * @param row
-	 */
-	public void setFaceRow(int row, RubiksCubeTile[] rowSet)
-	{
-		for(int col = 0; col < this.faceTiles.length; col++)
-		{
-			this.faceTiles[row][col] = rowSet[col];
-		}
-	}
-	
-	/**
-	 * @param row
-	 */
-	public void setFaceCol(int col, RubiksCubeTile[] colSet)
-	{
-		for(int row = 0; row < this.faceTiles.length; row++)
-		{
-			this.faceTiles[row][col] = colSet[row];
-		}
-	}
-	
-	/**
-	 * @param row
-	 * @return
-	 */
-	public RubiksCubeTile[] getFaceRow(int row)
-	{
-		RubiksCubeTile[] rowSet = new RubiksCubeTile[this.faceTiles.length];
-		
-		for(int col = 0; col < this.faceTiles.length; col++)
-		{
-			rowSet[col] = this.faceTiles[row][col];
-		}
-		
-		return rowSet;
-	}
-	
-	/**
-	 * @param col
-	 * @return colSet
-	 */
 	public RubiksCubeTile[] getFaceCol(int col)
 	{
 		RubiksCubeTile[] colSet = new RubiksCubeTile[this.faceTiles.length];
@@ -196,6 +188,38 @@ public class RubiksCubeFace
 		return colSet;
 	}
 	
+	public RubiksCubeTile[] getFaceRow(int row)
+	{
+		RubiksCubeTile[] rowSet = new RubiksCubeTile[this.faceTiles.length];
+		
+		for(int col = 0; col < this.faceTiles.length; col++)
+		{
+			rowSet[col] = this.faceTiles[row][col];
+		}
+		
+		return rowSet;
+	}
+	
+	public void setFaceCol(int col, RubiksCubeTile[] colSet)
+	{
+		for(int row = 0; row < this.faceTiles.length; row++)
+		{
+			this.faceTiles[row][col] = colSet[row];
+		}
+		
+		setFaceTilesMap();
+	}
+	
+	public void setFaceRow(int row, RubiksCubeTile[] rowSet)
+	{
+		for(int col = 0; col < this.faceTiles.length; col++)
+		{
+			this.faceTiles[row][col] = rowSet[col];
+		}
+		
+		setFaceTilesMap();
+	}
+	
 	/**
 	 * Return the adjacent face that is adjacent in the direction specified in the parameter
 	 * @param direction
@@ -204,6 +228,32 @@ public class RubiksCubeFace
 	public List<FaceName> getRotationMap(Direction direction)
 	{
 		return this.rotationMap.get(direction);
+	}
+	
+	public RubiksCubeTile getFaceTile(TileLocation tileLocation)
+	{
+		return this.faceTilesMap.get(tileLocation);
+	}
+	
+	private void setFaceTilesMap(EnumMap<TileLocation, RubiksCubeTile> faceTilesMap)
+	{
+		this.faceTilesMap = new EnumMap<TileLocation, RubiksCubeTile>(TileLocation.class);
+		
+	}
+	
+	private void setFaceTilesMap()
+	{	
+		for(int row = 0; row < numRows; row++)
+		{
+			for(int col = 0; col < numCols; col++)
+			{
+				RubiksCubeTile currentTile = this.faceTiles[row][col];
+				TileLocation currentTileLocation = TileLocation.getTileLocation(row, col);
+				
+				this.faceTiles[row][col] = currentTile;
+				this.faceTilesMap.put(currentTileLocation, currentTile);
+			}
+		}
 	}
 	
 //	/**
