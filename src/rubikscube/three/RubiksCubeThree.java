@@ -166,14 +166,6 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	private void solveWhiteCross()
 	{
-		
-//		if(bottomFace.getEdgeTiles(TileLocation.TOP).getTileColor() == TileColor.WHITE &&
-//		   bottomFace.getEdgeTiles(TileLocation.LEFT).getTileColor() == TileColor.WHITE &&
-//		   bottomFace.getEdgeTiles(TileLocation.BOTTOM).getTileColor() == TileColor.WHITE &&
-//		   bottomFace.getEdgeTiles(TileLocation.RIGHT).getTileColor() == TileColor.WHITE)
-//		{
-//			return;
-//		}
 		for(RubiksCubeFace face : this.faces)
 		{
 			if(bottomFace.isWhiteTile(TileLocation.TOP_EDGE))
@@ -181,9 +173,31 @@ public class RubiksCubeThree implements RubiksCubeInterface
 			else
 				solveWhiteCrossTop(face);
 		}
-		solveWhiteCrossLeft();
-		solveWhiteCrossBottom();
-		solveWhiteCrossRight();
+		
+		System.out.println();
+		this.displayRubiksCube();
+		
+		for(RubiksCubeFace face : this.faces)
+		{
+			if(bottomFace.isWhiteTile(TileLocation.LEFT_EDGE))
+				break;
+			else
+				solveWhiteCrossLeft(face);
+		}
+//		for(RubiksCubeFace face : this.faces)
+//		{
+//			if(bottomFace.isWhiteTile(TileLocation.BOTTOM_EDGE))
+//				break;
+//			else
+//				solveWhiteCrossBottom(face);
+//		}
+//		for(RubiksCubeFace face : this.faces)
+//		{
+//			if(bottomFace.isWhiteTile(TileLocation.RIGHT_EDGE))
+//				break;
+//			else
+//				solveWhiteCrossRight(face);
+//		}
 	}
 	
 	private boolean solveWhiteCrossTop(RubiksCubeFace face)
@@ -387,19 +401,611 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		return false;
 	}
 	
-	private void solveWhiteCrossLeft()
-	{
+	private boolean solveWhiteCrossLeft(RubiksCubeFace face)
+	{	
 		
+		TileLocation tileLocation = face.findWhiteEdge();
+		
+		if(tileLocation == null)
+			return false;
+		
+		switch(tileLocation)
+		{
+			case TOP_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateBackClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomClockwise();
+					this.rotateLeftCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateFrontClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case BOTTOM_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomClockwise();
+					this.rotateFrontClockwise();
+					this.rotateFrontClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateBackCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateLeftCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateFrontClockwise();
+					this.rotateLeftClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateLeftCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateFrontClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case LEFT_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateLeftClockwise();
+					this.rotateLeftClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateLeftClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateFrontClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case RIGHT_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateLeftCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateBackCounterClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+		default:
+			break;
+		}
+		return false;
 	}
 	
-	private void solveWhiteCrossBottom()
-	{
+	private boolean solveWhiteCrossBottom(RubiksCubeFace face)
+	{	
 		
+		TileLocation tileLocation = face.findWhiteEdge();
+		
+		if(tileLocation == null)
+			return false;
+		
+		switch(tileLocation)
+		{
+			case TOP_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateFrontClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateFrontClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case BOTTOM_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateFrontClockwise();
+					this.rotateFrontClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBackClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();					
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateFrontClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateLeftCounterClockwise();
+					this.rotateFrontCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateRightClockwise();
+					this.rotateFrontClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case LEFT_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateFrontClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case RIGHT_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateLeftCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateFrontCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+		default:
+			break;
+		}
+		return false;
 	}
 	
-	private void solveWhiteCrossRight()
-	{
+	private boolean solveWhiteCrossRight(RubiksCubeFace face)
+	{	
 		
+		TileLocation tileLocation = face.findWhiteEdge();
+		
+		if(tileLocation == null)
+			return false;
+		
+		switch(tileLocation)
+		{
+			case TOP_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateFrontClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateFrontClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case BOTTOM_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateFrontClockwise();
+					this.rotateFrontClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBackClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();					
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateFrontClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateLeftCounterClockwise();
+					this.rotateFrontCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateRightClockwise();
+					this.rotateFrontClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case LEFT_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateBottomCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateFrontClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+			
+			case RIGHT_EDGE:
+			{
+				switch(face.getFaceName())
+				{
+				case TOP:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case BACK:
+				{
+					this.rotateBottomClockwise();
+					this.rotateLeftCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case FRONT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				case LEFT:
+				{
+					this.rotateFrontCounterClockwise();
+					return true;
+				}
+				case RIGHT:
+				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					return true;
+				}
+				default:
+					break;
+				}
+			}
+		default:
+			break;
+		}
+		return false;
 	}
 	
 	/**
@@ -408,13 +1014,14 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	public void rotateTopClockwise()
 	{	
 		int row = 0;
+		boolean isReverse = false;
 		
 		topFace.rotateTilesClockwise();
 		
-		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row));
-		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row));
-		this.tileSets.put(FaceName.BACK, backFace.getFaceRow(row));
-		this.tileSets.put(FaceName.LEFT, leftFace.getFaceRow(row));
+		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.BACK, backFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.LEFT, leftFace.getFaceRow(row, isReverse));
 		
 		frontFace.setFaceRow(row, this.tileSets.get(FaceName.RIGHT));
 		rightFace.setFaceRow(row, this.tileSets.get(FaceName.BACK));
@@ -428,13 +1035,14 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	public void rotateTopCounterClockwise()
 	{	
 		int row = 0;
+		boolean isReverse = false;
 		
 		topFace.rotateTilesCounterClockwise();
 		
-		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row));
-		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row));
-		this.tileSets.put(FaceName.BACK, backFace.getFaceRow(row));
-		this.tileSets.put(FaceName.LEFT, leftFace.getFaceRow(row));
+		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.BACK, backFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.LEFT, leftFace.getFaceRow(row, isReverse));
 		
 		frontFace.setFaceRow(row, this.tileSets.get(FaceName.LEFT));
 		rightFace.setFaceRow(row, this.tileSets.get(FaceName.FRONT));
@@ -447,19 +1055,26 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void rotateLeftClockwise()
 	{	
-		int col = 0;
+		int frontCol = 0;
+		int topCol = 0;
+		int backCol = 2;
+		int bottomCol = 0;
+		boolean isReverse = false;
 		
 		leftFace.rotateTilesClockwise();
 		
-		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(col));
-		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(col));
-		this.tileSets.put(FaceName.BACK, backFace.getFaceCol(col));
-		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceCol(col));
+		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(frontCol, isReverse));
+		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(topCol, isReverse));
 		
-		frontFace.setFaceCol(col, this.tileSets.get(FaceName.TOP));
-		topFace.setFaceCol(col, this.tileSets.get(FaceName.BACK));
-		backFace.setFaceCol(col, this.tileSets.get(FaceName.BOTTOM));
-		bottomFace.setFaceCol(col, this.tileSets.get(FaceName.FRONT));
+		isReverse = true;
+		
+		this.tileSets.put(FaceName.BACK, backFace.getFaceCol(backCol, isReverse));
+		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceCol(bottomCol, isReverse));
+		
+		frontFace.setFaceCol(frontCol, this.tileSets.get(FaceName.TOP));
+		topFace.setFaceCol(topCol, this.tileSets.get(FaceName.BACK));
+		backFace.setFaceCol(backCol, this.tileSets.get(FaceName.BOTTOM));
+		bottomFace.setFaceCol(bottomCol, this.tileSets.get(FaceName.FRONT));
 	}
 	
 	/**
@@ -467,19 +1082,29 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void rotateLeftCounterClockwise()
 	{	
-		int col = 0;
+		int frontCol = 0;
+		int topCol = 0;
+		int backCol = 2;
+		int bottomCol = 0;
+		boolean isReverse = false;
 		
 		leftFace.rotateTilesCounterClockwise();
 		
-		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(col));
-		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(col));
-		this.tileSets.put(FaceName.BACK, backFace.getFaceCol(col));
-		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceCol(col));
+		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(frontCol, isReverse));
 		
-		frontFace.setFaceCol(col, this.tileSets.get(FaceName.BOTTOM));
-		topFace.setFaceCol(col, this.tileSets.get(FaceName.FRONT));
-		backFace.setFaceCol(col, this.tileSets.get(FaceName.TOP));
-		bottomFace.setFaceCol(col, this.tileSets.get(FaceName.BACK));
+		isReverse = true;
+		
+		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(topCol, isReverse));
+		this.tileSets.put(FaceName.BACK, backFace.getFaceCol(backCol, isReverse));
+		
+		isReverse = false;
+		
+		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceCol(bottomCol, isReverse));
+		
+		frontFace.setFaceCol(frontCol, this.tileSets.get(FaceName.BOTTOM));
+		topFace.setFaceCol(topCol, this.tileSets.get(FaceName.FRONT));
+		backFace.setFaceCol(backCol, this.tileSets.get(FaceName.TOP));
+		bottomFace.setFaceCol(bottomCol, this.tileSets.get(FaceName.BACK));
 	}
 	
 	/**
@@ -491,13 +1116,14 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		int rightCol = 0;
 		int bottomRow = 0;
 		int leftCol = 2;
+		boolean isReverse = false;
 		
 		frontFace.rotateTilesClockwise();
 		
-		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow));
-		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol));
-		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceRow(bottomRow));
-		this.tileSets.put(FaceName.LEFT, leftFace.getFaceCol(leftCol));
+		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow, false));
+		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol, true));
+		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceRow(bottomRow, false));
+		this.tileSets.put(FaceName.LEFT, leftFace.getFaceCol(leftCol, true));
 		
 		topFace.setFaceRow(topRow, this.tileSets.get(FaceName.LEFT));
 		rightFace.setFaceCol(rightCol, this.tileSets.get(FaceName.TOP));
@@ -514,13 +1140,14 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		int rightCol = 0;
 		int bottomRow = 0;
 		int leftCol = 2;
+		boolean isReverse = false;
 		
 		frontFace.rotateTilesCounterClockwise();
 		
-		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow));
-		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol));
-		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceRow(bottomRow));
-		this.tileSets.put(FaceName.LEFT, leftFace.getFaceCol(leftCol));
+		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow, true));
+		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol, false));
+		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceRow(bottomRow, true));
+		this.tileSets.put(FaceName.LEFT, leftFace.getFaceCol(leftCol, false));
 		
 		topFace.setFaceRow(topRow, this.tileSets.get(FaceName.RIGHT));
 		rightFace.setFaceCol(rightCol, this.tileSets.get(FaceName.BOTTOM));
@@ -533,19 +1160,23 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void rotateRightClockwise()
 	{	
-		int col = 2;
+		int frontCol = 2;
+		int topCol = 2;
+		int backCol = 0;
+		int bottomCol = 2;
+		boolean isReverse = false;
 		
 		rightFace.rotateTilesClockwise();
 		
-		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(col));
-		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(col));
-		this.tileSets.put(FaceName.BACK, backFace.getFaceCol(col));
-		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceCol(col));
+		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(frontCol, false));
+		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(topCol, true));
+		this.tileSets.put(FaceName.BACK, backFace.getFaceCol(backCol, true));
+		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceCol(bottomCol, false));
 		
-		frontFace.setFaceCol(col, this.tileSets.get(FaceName.TOP));
-		topFace.setFaceCol(col, this.tileSets.get(FaceName.BACK));
-		backFace.setFaceCol(col, this.tileSets.get(FaceName.BOTTOM));
-		bottomFace.setFaceCol(col, this.tileSets.get(FaceName.FRONT));
+		frontFace.setFaceCol(frontCol, this.tileSets.get(FaceName.BOTTOM));
+		topFace.setFaceCol(topCol, this.tileSets.get(FaceName.FRONT));
+		backFace.setFaceCol(backCol, this.tileSets.get(FaceName.TOP));
+		bottomFace.setFaceCol(bottomCol, this.tileSets.get(FaceName.BACK));
 	}
 	
 	/**
@@ -553,19 +1184,23 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	 */
 	public void rotateRightCounterClockwise()
 	{	
-		int col = 2;
+		int frontCol = 2;
+		int topCol = 2;
+		int backCol = 0;
+		int bottomCol = 2;
+		boolean isReverse = false;
 		
 		rightFace.rotateTilesCounterClockwise();
 		
-		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(col));
-		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(col));
-		this.tileSets.put(FaceName.BACK, backFace.getFaceCol(col));
-		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceCol(col));
+		this.tileSets.put(FaceName.FRONT, frontFace.getFaceCol(frontCol, false));
+		this.tileSets.put(FaceName.TOP, topFace.getFaceCol(topCol, false));
+		this.tileSets.put(FaceName.BACK, backFace.getFaceCol(backCol, true));
+		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceCol(bottomCol, true));
 		
-		frontFace.setFaceCol(col, this.tileSets.get(FaceName.BOTTOM));
-		topFace.setFaceCol(col, this.tileSets.get(FaceName.FRONT));
-		backFace.setFaceCol(col, this.tileSets.get(FaceName.TOP));
-		bottomFace.setFaceCol(col, this.tileSets.get(FaceName.BACK));
+		frontFace.setFaceCol(frontCol, this.tileSets.get(FaceName.TOP));
+		topFace.setFaceCol(topCol, this.tileSets.get(FaceName.BACK));
+		backFace.setFaceCol(backCol, this.tileSets.get(FaceName.BOTTOM));
+		bottomFace.setFaceCol(bottomCol, this.tileSets.get(FaceName.FRONT));
 	}
 	
 	/**
@@ -577,13 +1212,14 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		int rightCol = 2;
 		int bottomRow = 2;
 		int leftCol = 0;
+		boolean isReverse = false;
 		
 		backFace.rotateTilesClockwise();
 		
-		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow));
-		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol));
-		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceRow(bottomRow));
-		this.tileSets.put(FaceName.LEFT, leftFace.getFaceCol(leftCol));
+		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow, true));
+		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol, false));
+		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceRow(bottomRow, true));
+		this.tileSets.put(FaceName.LEFT, leftFace.getFaceCol(leftCol, false));
 		
 		topFace.setFaceRow(topRow, this.tileSets.get(FaceName.RIGHT));
 		rightFace.setFaceCol(rightCol, this.tileSets.get(FaceName.BOTTOM));
@@ -600,13 +1236,14 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		int rightCol = 2;
 		int bottomRow = 2;
 		int leftCol = 0;
+		boolean isReverse = false;
 		
 		backFace.rotateTilesCounterClockwise();
 		
-		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow));
-		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol));
-		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceRow(bottomRow));
-		this.tileSets.put(FaceName.LEFT, leftFace.getFaceCol(leftCol));
+		this.tileSets.put(FaceName.TOP, topFace.getFaceRow(topRow, false));
+		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceCol(rightCol, true));
+		this.tileSets.put(FaceName.BOTTOM, bottomFace.getFaceRow(bottomRow, false));
+		this.tileSets.put(FaceName.LEFT, leftFace.getFaceCol(leftCol, true));
 		
 		topFace.setFaceRow(topRow, this.tileSets.get(FaceName.LEFT));
 		rightFace.setFaceCol(rightCol, this.tileSets.get(FaceName.TOP));
@@ -624,10 +1261,10 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		
 		bottomFace.rotateTilesClockwise();
 		
-		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row));
-		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row));
-		this.tileSets.put(FaceName.BACK, backFace.getFaceRow(row));
-		this.tileSets.put(FaceName.LEFT, leftFace.getFaceRow(row));
+		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row, false));
+		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row, false));
+		this.tileSets.put(FaceName.BACK, backFace.getFaceRow(row, false));
+		this.tileSets.put(FaceName.LEFT, leftFace.getFaceRow(row, false));
 		
 		frontFace.setFaceRow(row, this.tileSets.get(FaceName.LEFT));
 		rightFace.setFaceRow(row, this.tileSets.get(FaceName.FRONT));
@@ -644,10 +1281,10 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		
 		bottomFace.rotateTilesCounterClockwise();
 		
-		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row));
-		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row));
-		this.tileSets.put(FaceName.BACK, backFace.getFaceRow(row));
-		this.tileSets.put(FaceName.LEFT, leftFace.getFaceRow(row));
+		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row, false));
+		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row, false));
+		this.tileSets.put(FaceName.BACK, backFace.getFaceRow(row, false));
+		this.tileSets.put(FaceName.LEFT, leftFace.getFaceRow(row, false));
 		
 		frontFace.setFaceRow(row, this.tileSets.get(FaceName.RIGHT));
 		rightFace.setFaceRow(row, this.tileSets.get(FaceName.BACK));

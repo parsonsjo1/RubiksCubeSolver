@@ -176,25 +176,47 @@ public class RubiksCubeFace
 		return this.faceName;
 	}
 	
-	public RubiksCubeTile[] getFaceCol(int col)
+	public RubiksCubeTile[] getFaceCol(int col, boolean isReverse)
 	{
 		RubiksCubeTile[] colSet = new RubiksCubeTile[this.faceTiles.length];
 		
-		for(int row = 0; row < this.faceTiles.length; row++)
+		if(isReverse)
 		{
-			colSet[row] = this.faceTiles[row][col];
+			int counter = 0;
+			for(int row = faceTiles.length - 1; row >= 0; row--)
+			{
+				colSet[counter++] = this.faceTiles[row][col];
+			}
+		}
+		else
+		{
+			for(int row = 0; row < this.faceTiles.length; row++)
+			{
+				colSet[row] = this.faceTiles[row][col];
+			}
 		}
 		
 		return colSet;
 	}
 	
-	public RubiksCubeTile[] getFaceRow(int row)
+	public RubiksCubeTile[] getFaceRow(int row, boolean isReverse)
 	{
 		RubiksCubeTile[] rowSet = new RubiksCubeTile[this.faceTiles.length];
 		
-		for(int col = 0; col < this.faceTiles.length; col++)
+		if(isReverse)
 		{
-			rowSet[col] = this.faceTiles[row][col];
+			int counter = 0;
+			for(int col = this.faceTiles.length - 1; col >= 0; col--)
+			{
+				rowSet[counter++] = this.faceTiles[row][col];
+			}
+		}
+		else
+		{
+			for(int col = 0; col < this.faceTiles.length; col++)
+			{
+				rowSet[col] = this.faceTiles[row][col];
+			}
 		}
 		
 		return rowSet;
