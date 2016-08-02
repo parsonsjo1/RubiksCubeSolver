@@ -27,4 +27,22 @@ public class RubiksCubeTile
 	{
 		return this.tileColor;
 	}
+	
+	@Override
+	public boolean equals(Object obj) 
+	{
+	    if (obj == null) 
+	    {
+	        return false;
+	    }
+	    if (!RubiksCubeTile.class.isAssignableFrom(obj.getClass())) 
+	    {
+	        return false;
+	    }
+	    final RubiksCubeTile other = (RubiksCubeTile) obj;
+	    if (!this.tileColor.equals(other.tileColor)) {
+	        return false;
+	    }
+	    return true;
+	}
 }

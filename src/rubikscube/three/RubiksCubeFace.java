@@ -112,6 +112,11 @@ public class RubiksCubeFace
 		setFaceTilesMap();
 	}
 	
+	public boolean isEqual(TileLocation tileLocation1, TileLocation tileLocation2)
+	{
+		return this.getFaceTile(tileLocation1).equals(this.getFaceTile(tileLocation2));
+	}
+	
 	/*
 	 * Return the requested face tile
 	 */

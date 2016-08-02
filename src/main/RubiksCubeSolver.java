@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import rubikscube.RubiksCubeInterface;
-import rubikscube.enums.FaceName;
 import rubikscube.enums.RubiksCubeTypes;
 import rubikscube.exceptions.InvalidInputException;
 import rubikscube.three.RubiksCubeThree;

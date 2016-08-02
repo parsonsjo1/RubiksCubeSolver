@@ -159,6 +159,9 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	{
 		//Step 1
 		this.solveWhiteCross();
+		
+		//Step 2
+		this.solveWhiteCorners();
 	}
 	
 	/**
@@ -174,9 +177,6 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				solveWhiteCrossTop(face);
 		}
 		
-		System.out.println();
-		this.displayRubiksCube();
-		
 		for(RubiksCubeFace face : this.faces)
 		{
 			if(bottomFace.isWhiteTile(TileLocation.LEFT_EDGE))
@@ -184,20 +184,74 @@ public class RubiksCubeThree implements RubiksCubeInterface
 			else
 				solveWhiteCrossLeft(face);
 		}
-//		for(RubiksCubeFace face : this.faces)
-//		{
-//			if(bottomFace.isWhiteTile(TileLocation.BOTTOM_EDGE))
-//				break;
-//			else
-//				solveWhiteCrossBottom(face);
-//		}
-//		for(RubiksCubeFace face : this.faces)
-//		{
-//			if(bottomFace.isWhiteTile(TileLocation.RIGHT_EDGE))
-//				break;
-//			else
-//				solveWhiteCrossRight(face);
-//		}
+		
+		for(RubiksCubeFace face : this.faces)
+		{
+			if(bottomFace.isWhiteTile(TileLocation.BOTTOM_EDGE))
+				break;
+			else
+				solveWhiteCrossBottom(face);
+		}
+		
+		for(RubiksCubeFace face : this.faces)
+		{
+			if(bottomFace.isWhiteTile(TileLocation.RIGHT_EDGE))
+				break;
+			else
+				solveWhiteCrossRight(face);
+		}
+		
+		while(!this.topFace.isWhiteTile(TileLocation.TOP_EDGE))
+		{
+			if(this.backFace.isEqual(TileLocation.BOTTOM_EDGE, TileLocation.MIDDLE))
+			{
+				this.rotateBackClockwise();
+				this.rotateBackClockwise();
+			}
+			else
+			{
+				this.rotateBottomClockwise();
+			}
+		}
+		
+		while(!this.topFace.isWhiteTile(TileLocation.LEFT_EDGE))
+		{
+			if(this.leftFace.isEqual(TileLocation.BOTTOM_EDGE, TileLocation.MIDDLE))
+			{
+				this.rotateLeftClockwise();
+				this.rotateLeftClockwise();
+			}
+			else
+			{
+				this.rotateBottomClockwise();
+			}
+		}
+		
+		while(!this.topFace.isWhiteTile(TileLocation.BOTTOM_EDGE))
+		{
+			if(this.frontFace.isEqual(TileLocation.BOTTOM_EDGE, TileLocation.MIDDLE))
+			{
+				this.rotateFrontClockwise();
+				this.rotateFrontClockwise();
+			}
+			else
+			{
+				this.rotateBottomClockwise();
+			}
+		}
+		
+		while(!this.topFace.isWhiteTile(TileLocation.RIGHT_EDGE))
+		{
+			if(this.rightFace.isEqual(TileLocation.BOTTOM_EDGE, TileLocation.MIDDLE))
+			{
+				this.rotateRightClockwise();
+				this.rotateRightClockwise();
+			}
+			else
+			{
+				this.rotateBottomClockwise();
+			}
+		}
 	}
 	
 	private boolean solveWhiteCrossTop(RubiksCubeFace face)
@@ -622,46 +676,42 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				{
 				case TOP:
 				{
-					this.rotateBottomClockwise();
-					this.rotateBottomClockwise();
 					this.rotateBackClockwise();
 					this.rotateBackClockwise();
-					this.rotateBottomCounterClockwise();
-					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case BACK:
 				{
+					this.rotateBackClockwise();
 					this.rotateBottomClockwise();
-					this.rotateBottomClockwise();
-					this.rotateBackCounterClockwise();
-					this.rotateBottomCounterClockwise();
-					this.rotateRightClockwise();
+					this.rotateLeftCounterClockwise();
 					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case FRONT:
 				{
-					this.rotateFrontClockwise();
 					this.rotateBottomClockwise();
-					this.rotateRightCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateLeftClockwise();
 					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case LEFT:
 				{
-					this.rotateBottomCounterClockwise();
-					this.rotateLeftClockwise();
 					this.rotateBottomClockwise();
-					this.rotateFrontCounterClockwise();
+					this.rotateLeftCounterClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBackClockwise();
 					return true;
 				}
 				case RIGHT:
 				{
-					this.rotateBottomClockwise();
-					this.rotateRightCounterClockwise();
 					this.rotateBottomCounterClockwise();
-					this.rotateFrontClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackCounterClockwise();
 					return true;
 				}
 				default:
@@ -675,36 +725,44 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				{
 				case TOP:
 				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					this.rotateFrontClockwise();
 					this.rotateFrontClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case BACK:
 				{
 					this.rotateBackClockwise();
-					this.rotateBottomClockwise();
+					this.rotateBottomCounterClockwise();
 					this.rotateRightClockwise();
-					this.rotateBottomCounterClockwise();					
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case FRONT:
 				{
-					this.rotateFrontClockwise();
-					this.rotateBottomCounterClockwise();
-					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateRightCounterClockwise();
 					this.rotateBottomClockwise();
 					return true;
 				}
 				case LEFT:
 				{
-					this.rotateLeftCounterClockwise();
-					this.rotateFrontCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomCounterClockwise();
+					this.rotateBackClockwise();
 					return true;
 				}
 				case RIGHT:
 				{
-					this.rotateRightClockwise();
-					this.rotateFrontClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBackCounterClockwise();
 					return true;
 				}
 				default:
@@ -718,38 +776,38 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				{
 				case TOP:
 				{
-					this.rotateBottomCounterClockwise();
-					this.rotateLeftClockwise();
-					this.rotateLeftClockwise();
 					this.rotateBottomClockwise();
+					this.rotateLeftClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case BACK:
 				{
-					this.rotateBottomClockwise();
-					this.rotateRightClockwise();
 					this.rotateBottomCounterClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case FRONT:
 				{
-					this.rotateBottomCounterClockwise();
-					this.rotateLeftClockwise();
 					this.rotateBottomClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case LEFT:
 				{
-					this.rotateBottomCounterClockwise();
-					this.rotateBottomCounterClockwise();
 					this.rotateBackClockwise();
-					this.rotateBottomClockwise();
-					this.rotateBottomClockwise();
 					return true;
 				}
 				case RIGHT:
 				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					this.rotateFrontClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				default:
@@ -763,10 +821,10 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				{
 				case TOP:
 				{
-					this.rotateBottomClockwise();
-					this.rotateRightCounterClockwise();
-					this.rotateRightCounterClockwise();
 					this.rotateBottomCounterClockwise();
+					this.rotateRightClockwise();
+					this.rotateRightClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case BACK:
@@ -778,23 +836,23 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				}
 				case FRONT:
 				{
-					this.rotateBottomClockwise();
-					this.rotateRightCounterClockwise();
 					this.rotateBottomCounterClockwise();
+					this.rotateRightCounterClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case LEFT:
 				{
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					this.rotateFrontCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case RIGHT:
 				{
-					this.rotateBottomClockwise();
-					this.rotateBottomClockwise();
 					this.rotateBackCounterClockwise();
-					this.rotateBottomCounterClockwise();
-					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				default:
@@ -824,45 +882,42 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				case TOP:
 				{
 					this.rotateBottomClockwise();
-					this.rotateBottomClockwise();
 					this.rotateBackClockwise();
 					this.rotateBackClockwise();
-					this.rotateBottomCounterClockwise();
-					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case BACK:
 				{
 					this.rotateBottomClockwise();
-					this.rotateBottomClockwise();
 					this.rotateBackCounterClockwise();
 					this.rotateBottomCounterClockwise();
 					this.rotateRightClockwise();
-					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case FRONT:
 				{
+					this.rotateBottomCounterClockwise();
 					this.rotateFrontClockwise();
 					this.rotateBottomClockwise();
 					this.rotateRightCounterClockwise();
-					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case LEFT:
 				{
-					this.rotateBottomCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					this.rotateLeftClockwise();
 					this.rotateBottomClockwise();
 					this.rotateFrontCounterClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case RIGHT:
 				{
+					this.rotateRightClockwise();
 					this.rotateBottomClockwise();
-					this.rotateRightCounterClockwise();
+					this.rotateBackCounterClockwise();
 					this.rotateBottomCounterClockwise();
-					this.rotateFrontClockwise();
 					return true;
 				}
 				default:
@@ -876,36 +931,38 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				{
 				case TOP:
 				{
+					this.rotateBottomCounterClockwise();
 					this.rotateFrontClockwise();
 					this.rotateFrontClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case BACK:
 				{
 					this.rotateBackClockwise();
-					this.rotateBottomClockwise();
 					this.rotateRightClockwise();
-					this.rotateBottomCounterClockwise();					
 					return true;
 				}
 				case FRONT:
 				{
-					this.rotateFrontClockwise();
-					this.rotateBottomCounterClockwise();
-					this.rotateLeftClockwise();
-					this.rotateBottomClockwise();
+					this.rotateFrontCounterClockwise();
+					this.rotateRightCounterClockwise();
 					return true;
 				}
 				case LEFT:
 				{
-					this.rotateLeftCounterClockwise();
-					this.rotateFrontCounterClockwise();
+					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBackClockwise();
+					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case RIGHT:
 				{
 					this.rotateRightClockwise();
+					this.rotateBottomCounterClockwise();
 					this.rotateFrontClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				default:
@@ -919,38 +976,40 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				{
 				case TOP:
 				{
-					this.rotateBottomCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					this.rotateLeftClockwise();
 					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
 					this.rotateBottomClockwise();
 					return true;
 				}
 				case BACK:
 				{
-					this.rotateBottomClockwise();
 					this.rotateRightClockwise();
-					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case FRONT:
 				{
-					this.rotateBottomCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					this.rotateLeftClockwise();
+					this.rotateBottomClockwise();
 					this.rotateBottomClockwise();
 					return true;
 				}
 				case LEFT:
 				{
-					this.rotateBottomCounterClockwise();
-					this.rotateBottomCounterClockwise();
+					this.rotateBottomClockwise();
 					this.rotateBackClockwise();
-					this.rotateBottomClockwise();
-					this.rotateBottomClockwise();
+					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case RIGHT:
 				{
+					this.rotateBottomCounterClockwise();
 					this.rotateFrontClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				default:
@@ -964,37 +1023,35 @@ public class RubiksCubeThree implements RubiksCubeInterface
 				{
 				case TOP:
 				{
-					this.rotateBottomClockwise();
-					this.rotateRightCounterClockwise();
-					this.rotateRightCounterClockwise();
-					this.rotateBottomCounterClockwise();
+					this.rotateRightClockwise();
+					this.rotateRightClockwise();
 					return true;
 				}
 				case BACK:
 				{
 					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					this.rotateLeftCounterClockwise();
-					this.rotateBottomCounterClockwise();
+					this.rotateBottomClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case FRONT:
 				{
-					this.rotateBottomClockwise();
 					this.rotateRightCounterClockwise();
-					this.rotateBottomCounterClockwise();
 					return true;
 				}
 				case LEFT:
 				{
+					this.rotateBottomCounterClockwise();
 					this.rotateFrontCounterClockwise();
+					this.rotateBottomClockwise();
 					return true;
 				}
 				case RIGHT:
 				{
 					this.rotateBottomClockwise();
-					this.rotateBottomClockwise();
 					this.rotateBackCounterClockwise();
-					this.rotateBottomCounterClockwise();
 					this.rotateBottomCounterClockwise();
 					return true;
 				}
