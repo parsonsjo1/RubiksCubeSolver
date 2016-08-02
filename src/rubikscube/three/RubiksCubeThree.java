@@ -1065,6 +1065,31 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		return false;
 	}
 	
+	private void solveWhiteCorners()
+	{
+		
+	}
+	
+	private boolean solveTopLeftWhiteCorner()
+	{
+		return false;
+	}
+	
+	private boolean solveTopRightWhiteCorner()
+	{
+		return false;
+	}
+	
+	private boolean solveBottomLeftWhiteCorner()
+	{
+		return false;
+	}
+	
+	private boolean solveBottomRightWhiteCorner()
+	{
+		return false;
+	}
+	
 	/**
 	 * Rotate the top of the cube clockwise
 	 */
