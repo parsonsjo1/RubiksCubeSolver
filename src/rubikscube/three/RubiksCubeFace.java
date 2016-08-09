@@ -38,26 +38,47 @@ public class RubiksCubeFace
 		//setRotationMap();
 	}
 	
-	public TileLocation findWhiteEdge()
+	public TileLocation findCornerLocation(TileColor tileColor)
 	{
-		if(this.isWhiteTile(TileLocation.TOP_EDGE))
-			return TileLocation.TOP_EDGE;
-		if(this.isWhiteTile(TileLocation.LEFT_EDGE))
-			return TileLocation.LEFT_EDGE;
-		if(this.isWhiteTile(TileLocation.BOTTOM_EDGE))
-			return TileLocation.BOTTOM_EDGE;
-		if(this.isWhiteTile(TileLocation.RIGHT_EDGE))
-			return TileLocation.RIGHT_EDGE;
+		if(this.isTileColor(TileLocation.TOP_LEFT_CORNER, TileColor.WHITE))
+			return TileLocation.TOP_LEFT_CORNER;
+		if(this.isTileColor(TileLocation.TOP_RIGHT_CORNER, TileColor.WHITE))
+			return TileLocation.TOP_RIGHT_CORNER;
+		if(this.isTileColor(TileLocation.BOTTOM_LEFT_CORNER, TileColor.WHITE))
+			return TileLocation.BOTTOM_LEFT_CORNER;
+		if(this.isTileColor(TileLocation.BOTTOM_RIGHT_CORNER, TileColor.WHITE))
+			return TileLocation.BOTTOM_RIGHT_CORNER;
 		
 		return null;
 	}
 	
-	public boolean isWhiteTile(TileLocation tileLocation)
+	public TileLocation findEdgeLocation(TileColor tileColor)
 	{
-		if(this.faceTilesMap.get(tileLocation).getTileColor() == TileColor.WHITE)
-			return true;
-		else
-			return false;
+		if(this.isTileColor(TileLocation.TOP_EDGE, TileColor.WHITE))
+			return TileLocation.TOP_EDGE;
+		if(this.isTileColor(TileLocation.RIGHT_EDGE, TileColor.WHITE))
+			return TileLocation.RIGHT_EDGE;
+		if(this.isTileColor(TileLocation.BOTTOM_EDGE, TileColor.WHITE))
+			return TileLocation.BOTTOM_EDGE;
+		if(this.isTileColor(TileLocation.LEFT_EDGE, TileColor.WHITE))
+			return TileLocation.LEFT_EDGE;
+		
+		return null;
+	}
+	
+	public TileColor getTileColor()
+	{
+		return this.getFaceTile(TileLocation.MIDDLE).getTileColor();
+	}
+	
+	public TileColor getTileColor(TileLocation tileLocation)
+	{
+		return this.getFaceTile(tileLocation).getTileColor();
+	}
+	
+	public boolean isTileColor(TileLocation tileLocation, TileColor tileColor)
+	{
+		return this.faceTilesMap.get(tileLocation).isTileColor(tileColor);
 	}
 	
 	/**
@@ -112,9 +133,19 @@ public class RubiksCubeFace
 		setFaceTilesMap();
 	}
 	
+	public boolean isEqual(TileLocation tileLocation)
+	{
+		return this.getFaceTile(TileLocation.MIDDLE).equals(this.getFaceTile(tileLocation));
+	}
+	
 	public boolean isEqual(TileLocation tileLocation1, TileLocation tileLocation2)
 	{
 		return this.getFaceTile(tileLocation1).equals(this.getFaceTile(tileLocation2));
+	}
+	
+	public boolean isEqual(TileLocation tileLocation, RubiksCubeTile otherTile)
+	{
+		return this.getFaceTile(tileLocation).equals(otherTile);
 	}
 	
 	/*
@@ -255,6 +286,11 @@ public class RubiksCubeFace
 	public List<FaceName> getRotationMap(Direction direction)
 	{
 		return this.rotationMap.get(direction);
+	}
+	
+	public RubiksCubeTile getFaceTile()
+	{
+		return this.faceTilesMap.get(TileLocation.MIDDLE);
 	}
 	
 	public RubiksCubeTile getFaceTile(TileLocation tileLocation)

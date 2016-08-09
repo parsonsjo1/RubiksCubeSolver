@@ -28,6 +28,14 @@ public class RubiksCubeTile
 		return this.tileColor;
 	}
 	
+	public boolean isTileColor(TileColor tileColor)
+	{
+		if(this.tileColor == tileColor)
+			return true;
+		else
+			return false;
+	}
+	
 	@Override
 	public boolean equals(Object obj) 
 	{
