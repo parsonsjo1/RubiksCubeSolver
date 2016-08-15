@@ -7,7 +7,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import rubikscube.RubiksCubeInterface;
+import rubikscube.IRubiksCube;
+import rubikscube.standard.StandardRubiksCube;
 
 /**
  * @author Joshua Parsons
@@ -15,14 +16,14 @@ import rubikscube.RubiksCubeInterface;
  */
 public class TestRotations
 {
-	private RubiksCubeInterface rubiksCube;
+	private IRubiksCube rubiksCube;
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception
 	{
-		rubiksCube = new RubiksCubeThree();
+		rubiksCube = new StandardRubiksCube();
 	}
 
 	/**

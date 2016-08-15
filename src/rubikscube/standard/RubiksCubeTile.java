@@ -1,7 +1,7 @@
 /**
  * 
  */
-package rubikscube.three;
+package rubikscube.standard;
 
 import rubikscube.enums.TileColor;
 

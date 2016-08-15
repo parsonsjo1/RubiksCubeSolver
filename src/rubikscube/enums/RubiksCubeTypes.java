@@ -6,13 +6,17 @@ package rubikscube.enums;
  */
 public enum RubiksCubeTypes
 {
-	THREE;
+	BEGINNER, STANDARD;
 	
 	public int getSize()
 	{
-		switch(this.toString().toLowerCase())
+		switch(this)
 		{
-			case "three":
+			case BEGINNER:
+			{
+				return 2;
+			}
+			case STANDARD:
 			{
 				return 3;
 			}

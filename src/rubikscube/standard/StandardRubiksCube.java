@@ -1,14 +1,16 @@
 /**
  * 
  */
-package rubikscube.three;
+package rubikscube.standard;
 
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
 
-import rubikscube.RubiksCubeInterface;
+import rubikscube.IRubiksCube;
+import rubikscube.RubiksCubeFactory;
 import rubikscube.enums.FaceName;
+import rubikscube.enums.RubiksCubeTypes;
 import rubikscube.enums.TileColor;
 import rubikscube.enums.TileLocation;
 
@@ -16,8 +18,18 @@ import rubikscube.enums.TileLocation;
  * @author Joshua Parsons
  * 
  */
-public class RubiksCubeThree implements RubiksCubeInterface
+public class StandardRubiksCube implements IRubiksCube
 {
+	public static void registerRubiksCube()
+	{
+		RubiksCubeFactory.getInstance().registerRubiksCube("Standard (3x3)", new StandardRubiksCube());
+	}
+	
+	public IRubiksCube createRubiksCube()
+	{
+		return new StandardRubiksCube();
+	}
+	
 	private Map<FaceName, RubiksCubeTile[]> tileSets;
 	private RubiksCubeFace[] faces;
 	
@@ -34,7 +46,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	/**
 	 * Default Constructor
 	 */
-	public RubiksCubeThree()
+	public StandardRubiksCube()
 	{
 		setTileSets(new EnumMap<FaceName, RubiksCubeTile[]>(FaceName.class));
 		setFaces(new RubiksCubeFace[NUM_FACES]);
@@ -46,7 +58,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		setBottomFace(new RubiksCubeFace(numRows, numCols, FaceName.BOTTOM, TileColor.YELLOW));
 	}
 	
-	public RubiksCubeThree(TileColor topFaceColor, TileColor leftFaceColor, TileColor frontFaceColor, TileColor rightFaceColor, TileColor backFaceColor, TileColor bottomFaceColor)
+	public StandardRubiksCube(TileColor topFaceColor, TileColor leftFaceColor, TileColor frontFaceColor, TileColor rightFaceColor, TileColor backFaceColor, TileColor bottomFaceColor)
 	{
 		setTileSets(new EnumMap<FaceName, RubiksCubeTile[]>(FaceName.class));
 		setFaces(new RubiksCubeFace[NUM_FACES]);
@@ -166,7 +178,7 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		this.solveWhiteCorners();
 		
 		//Step 3
-		//this.solveMiddleLayers();
+		this.solveMiddleLayers();
 		
 		//Step 4
 		//this.solveBottomCross();
@@ -3744,45 +3756,20 @@ public class RubiksCubeThree implements RubiksCubeInterface
 	}
 	
 	private void solveMiddleLayers()
-	{
-		boolean isFrontRightEdgeSolved = false;
-		boolean isFrontLeftEdgeSolved = false;
-		boolean isRightRightEdgeSolved = false;
-		boolean isRightLeftEdgeSolved = false;
-		boolean isBackRightEdgeSolved = false;
-		boolean isBackLeftEdgeSolved = false;
-		boolean isLeftRightEdgeSolved = false;
-		boolean isLeftLeftEdgeSolved = false;
-		
+	{	
 		boolean isFrontMiddleLayerSolved = false;
 		boolean isRightMiddleLayerSolved = false;
 		boolean isBackMiddleLayerSolved = false;
 		boolean isLeftMiddleLayerSolved = false;
-		
 		boolean isMiddleLayersSolved = false;
 		
 		while(!isMiddleLayersSolved)
 		{
 			
-			if(!isFrontMiddleLayerSolved)
-			{
-				isFrontMiddleLayerSolved = solveFrontFaceMiddleLayer(leftFace.getFaceTile(), rightFace.getFaceTile());
-			}
-			
-			if(!isRightMiddleLayerSolved)
-			{
-				
-			}
-			
-			if(!isBackMiddleLayerSolved)
-			{
-				
-			}
-			
-			if(!isLeftMiddleLayerSolved)
-			{
-				
-			}
+			isFrontMiddleLayerSolved = this.solveFrontFaceMiddleLayer();
+			isRightMiddleLayerSolved = this.solveRightFaceMiddleLayer();
+			isBackMiddleLayerSolved = this.solveBackFaceMiddleLayer();
+			isLeftMiddleLayerSolved = this.solveLeftFaceMiddleLayer();	
 			
 			if(isFrontMiddleLayerSolved &&
 			   isRightMiddleLayerSolved &&
@@ -3791,63 +3778,415 @@ public class RubiksCubeThree implements RubiksCubeInterface
 			{
 				isMiddleLayersSolved = true;
 			}
+		
+			while(true)
+			{
+				if(!frontFace.getFaceTile().equals(bottomFace.getFaceTile()) &&
+				   !rightFace.getFaceTile().equals(bottomFace.getFaceTile()) &&
+				   !backFace.getFaceTile().equals(bottomFace.getFaceTile()) &&
+				   !leftFace.getFaceTile().equals(bottomFace.getFaceTile()))
+				{
+					break;
+				}
+				System.out.println("RotateBottom");
+				this.rotateBottomClockwise();
+				this.displayRubiksCube();
+				
+				if(frontFace.getFaceTile().equals(frontFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+				   rightFace.getFaceTile().equals(rightFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+				   backFace.getFaceTile().equals(backFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+				   leftFace.getFaceTile().equals(leftFace.getFaceTile(TileLocation.BOTTOM_EDGE)))
+				{
+					break;
+				}
+			}
 		}
 	}
 	
-	private boolean solveFrontFaceMiddleLayer(RubiksCubeTile leftFaceTile, RubiksCubeTile rightFaceTile)
+	private boolean solveFrontFaceMiddleLayer()
 	{
 		boolean isRightEdge = false;
 		boolean isLeftEdge = false;
 		boolean isRightEdgeSolved = false;
 		boolean isLeftEdgeSolved = false;
-		
-		boolean isMiddleLayerSolved = false;
+		boolean isBottomFaceColor = false;
+		RubiksCubeTile bottomFaceTile = this.bottomFace.getFaceTile();
+		RubiksCubeTile bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.TOP_EDGE);
 
-			if(frontFace.isEqual(TileLocation.BOTTOM_EDGE))
-			{
-				RubiksCubeTile bottomTopEdgeTile = bottomFace.getFaceTile(TileLocation.TOP_EDGE);
-				isRightEdge = bottomTopEdgeTile.equals(rightFaceTile);
-				isLeftEdge = bottomTopEdgeTile.equals(leftFaceTile);
-				
-				if(isRightEdge)
-				{
-					this.rotateBottomCounterClockwise();
-					this.rotateRightCounterClockwise();
-					this.rotateBottomClockwise();
-					this.rotateRightClockwise();
-					this.rotateBottomClockwise();
-					this.rotateFrontClockwise();
-					this.rotateBottomCounterClockwise();
-					this.rotateFrontCounterClockwise();
-					
-					isRightEdgeSolved = true;
-				}
-				
-				if(isLeftEdge)
-				{
-					this.rotateBottomClockwise();
-					this.rotateLeftClockwise();
-					this.rotateBottomCounterClockwise();
-					this.rotateLeftCounterClockwise();
-					this.rotateBottomCounterClockwise();
-					this.rotateFrontCounterClockwise();
-					this.rotateBottomClockwise();
-					this.rotateFrontClockwise();
-					
-					isLeftEdgeSolved = true;
-				}
-			}
-			else
-			{
-				this.rotateBottomClockwise();
-			}
+		
+		isRightEdgeSolved = this.frontFace.isEqual(TileLocation.RIGHT_EDGE) && this.rightFace.isEqual(TileLocation.LEFT_EDGE); 
+		isLeftEdgeSolved = this.frontFace.isEqual(TileLocation.LEFT_EDGE) && this.leftFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isRightEdgeSolved && isLeftEdgeSolved)
+			return true;
+
+		if(this.frontFace.isEqual(TileLocation.BOTTOM_EDGE))
+		{
+			isRightEdge = bottomTopEdgeTile.equals(this.rightFace.getFaceTile());
+			isLeftEdge = bottomTopEdgeTile.equals(this.leftFace.getFaceTile());		
+		}
+		
+		if(bottomFaceTile.equals(frontFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+		   bottomFaceTile.equals(bottomTopEdgeTile))
+		{
+			isBottomFaceColor = true;
+		}
+		else
+		{
+			isBottomFaceColor = false;
+		}
+		
+		isRightEdgeSolved = this.frontFace.isEqual(TileLocation.RIGHT_EDGE) && this.rightFace.isEqual(TileLocation.LEFT_EDGE); 
+		
+		if(isRightEdge || (!isLeftEdge && !isRightEdgeSolved && isBottomFaceColor))
+		{
+			System.out.println("Rotate Front Right: ");
+
+			this.rotateBottomCounterClockwise();
+			this.rotateRightCounterClockwise();
+			this.rotateBottomClockwise();
+			this.rotateRightClockwise();
+			this.rotateBottomClockwise();
+			this.rotateFrontClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateFrontCounterClockwise();
+			bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.TOP_EDGE);
+			this.displayRubiksCube();
+		}
+		
+		if(this.frontFace.isEqual(TileLocation.BOTTOM_EDGE))
+		{
+			isRightEdge = bottomTopEdgeTile.equals(this.rightFace.getFaceTile());
+			isLeftEdge = bottomTopEdgeTile.equals(this.leftFace.getFaceTile());		
+		}
+		
+		if(bottomFaceTile.equals(frontFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+		   bottomFaceTile.equals(bottomTopEdgeTile))
+		{
+			isBottomFaceColor = true;
+		}
+		else
+		{
+			isBottomFaceColor = false;
+		}
+		
+		isLeftEdgeSolved = this.frontFace.isEqual(TileLocation.LEFT_EDGE) && this.leftFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isLeftEdge || (!isRightEdge && !isLeftEdgeSolved && isBottomFaceColor))
+		{
+
+			System.out.println("Rotate Front Left: ");
 			
-			if(isRightEdgeSolved && isLeftEdgeSolved)
-				return true;
-			
-			return false;
+			this.rotateBottomClockwise();
+			this.rotateLeftClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateLeftCounterClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateFrontCounterClockwise();
+			this.rotateBottomClockwise();
+			this.rotateFrontClockwise();
+			bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.TOP_EDGE);
+			this.displayRubiksCube();
+		}
+		
+		isRightEdgeSolved = this.frontFace.isEqual(TileLocation.RIGHT_EDGE) && this.rightFace.isEqual(TileLocation.LEFT_EDGE); 
+		isLeftEdgeSolved = this.frontFace.isEqual(TileLocation.LEFT_EDGE) && this.leftFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isRightEdgeSolved && isLeftEdgeSolved)
+			return true;
+		
+		return false;
 	}
-	
+	private boolean solveRightFaceMiddleLayer()
+	{
+		boolean isRightEdge = false;
+		boolean isLeftEdge = false;
+		boolean isRightEdgeSolved = false;
+		boolean isLeftEdgeSolved = false;
+		boolean isBottomFaceColor = false;
+		RubiksCubeTile bottomFaceTile = this.bottomFace.getFaceTile();
+		RubiksCubeTile bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.RIGHT_EDGE);
+		
+		isRightEdgeSolved = this.rightFace.isEqual(TileLocation.RIGHT_EDGE) && this.backFace.isEqual(TileLocation.LEFT_EDGE); 
+		isLeftEdgeSolved = this.rightFace.isEqual(TileLocation.LEFT_EDGE) && this.frontFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isRightEdgeSolved && isLeftEdgeSolved)
+			return true;
+		
+		if(this.rightFace.isEqual(TileLocation.BOTTOM_EDGE))
+		{
+			isRightEdge = bottomTopEdgeTile.equals(this.backFace.getFaceTile())|| 
+					 	 (this.rightFace.isEqual(this.backFace.getFaceTile(TileLocation.LEFT_EDGE)) && this.backFace.isEqual(this.rightFace.getFaceTile(TileLocation.RIGHT_EDGE)));;
+			isLeftEdge = bottomTopEdgeTile.equals(frontFace.getFaceTile())|| 
+					 	(this.rightFace.isEqual(this.frontFace.getFaceTile(TileLocation.LEFT_EDGE)) && frontFace.isEqual(this.rightFace.getFaceTile(TileLocation.LEFT_EDGE)));;
+			
+		}
+		
+		if(bottomFaceTile.equals(rightFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+		   bottomFaceTile.equals(bottomTopEdgeTile))
+		{
+			isBottomFaceColor = true;
+		}
+		else
+		{
+			isBottomFaceColor = false;
+		}
+		
+		isRightEdgeSolved = this.rightFace.isEqual(TileLocation.RIGHT_EDGE) && this.backFace.isEqual(TileLocation.LEFT_EDGE); 
+		
+		if(isRightEdge || (!isLeftEdge && !isRightEdgeSolved && isBottomFaceColor))
+		{
+			System.out.println("Rotate Right Right: ");
+			
+			this.rotateBottomCounterClockwise();
+			this.rotateBackCounterClockwise();
+			this.rotateBottomClockwise();
+			this.rotateBackClockwise();
+			this.rotateBottomClockwise();
+			this.rotateRightClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateRightCounterClockwise();
+			bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.TOP_EDGE);
+			this.displayRubiksCube();
+		}
+		
+		if(this.rightFace.isEqual(TileLocation.BOTTOM_EDGE))
+		{
+			isRightEdge = bottomTopEdgeTile.equals(this.backFace.getFaceTile())|| 
+					 	 (this.rightFace.isEqual(this.backFace.getFaceTile(TileLocation.LEFT_EDGE)) && this.backFace.isEqual(this.rightFace.getFaceTile(TileLocation.RIGHT_EDGE)));;
+			isLeftEdge = bottomTopEdgeTile.equals(frontFace.getFaceTile())|| 
+					 	(this.rightFace.isEqual(this.frontFace.getFaceTile(TileLocation.LEFT_EDGE)) && frontFace.isEqual(this.rightFace.getFaceTile(TileLocation.LEFT_EDGE)));;
+			
+		}
+		
+		if(bottomFaceTile.equals(rightFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+		   bottomFaceTile.equals(bottomTopEdgeTile))
+		{
+			isBottomFaceColor = true;
+		}
+		else
+		{
+			isBottomFaceColor = false;
+		}
+		
+		isLeftEdgeSolved = this.rightFace.isEqual(TileLocation.LEFT_EDGE) && this.frontFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isLeftEdge || (!isRightEdge && !isLeftEdgeSolved &&isBottomFaceColor))
+		{
+			System.out.println("Rotate Right Left: ");
+			
+			this.rotateBottomClockwise();
+			this.rotateFrontClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateFrontCounterClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateRightCounterClockwise();
+			this.rotateBottomClockwise();
+			this.rotateRightClockwise();
+			bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.TOP_EDGE);
+			this.displayRubiksCube();
+		}
+			
+		isRightEdgeSolved = this.rightFace.isEqual(TileLocation.RIGHT_EDGE) && this.backFace.isEqual(TileLocation.LEFT_EDGE); 
+		isLeftEdgeSolved = this.rightFace.isEqual(TileLocation.LEFT_EDGE) && this.frontFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isRightEdgeSolved && isLeftEdgeSolved)
+			return true;
+		
+		return false;
+	}	
+	private boolean solveBackFaceMiddleLayer()
+	{
+		boolean isRightEdge = false;
+		boolean isLeftEdge = false;
+		boolean isRightEdgeSolved = false;
+		boolean isLeftEdgeSolved = false;
+		boolean isBottomFaceColor = false;
+		RubiksCubeTile bottomFaceTile = this.bottomFace.getFaceTile();
+		RubiksCubeTile bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.BOTTOM_EDGE);
+		
+		isRightEdgeSolved = this.backFace.isEqual(TileLocation.RIGHT_EDGE) && this.leftFace.isEqual(TileLocation.LEFT_EDGE); 
+		isLeftEdgeSolved = this.backFace.isEqual(TileLocation.LEFT_EDGE) && this.rightFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isRightEdgeSolved && isLeftEdgeSolved)
+			return true;
+
+		if(this.backFace.isEqual(TileLocation.BOTTOM_EDGE))
+		{
+			isRightEdge = bottomTopEdgeTile.equals(this.leftFace.getFaceTile())|| 
+					 (this.backFace.isEqual(this.leftFace.getFaceTile(TileLocation.LEFT_EDGE)) && this.leftFace.isEqual(this.backFace.getFaceTile(TileLocation.RIGHT_EDGE)));;
+			isLeftEdge = bottomTopEdgeTile.equals(rightFace.getFaceTile())|| 
+					 (this.backFace.isEqual(this.rightFace.getFaceTile(TileLocation.RIGHT_EDGE)) && this.rightFace.isEqual(this.backFace.getFaceTile(TileLocation.LEFT_EDGE)));;
+		}
+		
+		if(bottomFaceTile.equals(backFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+		   bottomFaceTile.equals(bottomTopEdgeTile))
+		{
+			isBottomFaceColor = true;
+		}
+		else
+		{
+			isBottomFaceColor = false;
+		}
+		
+		isRightEdgeSolved = this.backFace.isEqual(TileLocation.RIGHT_EDGE) && this.leftFace.isEqual(TileLocation.LEFT_EDGE); 
+		
+		if(isRightEdge || (!isLeftEdge && !isRightEdgeSolved && isBottomFaceColor))
+		{
+			System.out.println("Rotate Back Right: ");
+			
+			this.rotateBottomCounterClockwise();
+			this.rotateLeftCounterClockwise();
+			this.rotateBottomClockwise();
+			this.rotateLeftClockwise();
+			this.rotateBottomClockwise();
+			this.rotateBackClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateBackCounterClockwise();
+			bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.TOP_EDGE);
+			this.displayRubiksCube();
+		}
+		
+		if(this.backFace.isEqual(TileLocation.BOTTOM_EDGE))
+		{
+			isRightEdge = bottomTopEdgeTile.equals(this.leftFace.getFaceTile())|| 
+					 (this.backFace.isEqual(this.leftFace.getFaceTile(TileLocation.LEFT_EDGE)) && this.leftFace.isEqual(this.backFace.getFaceTile(TileLocation.RIGHT_EDGE)));;
+			isLeftEdge = bottomTopEdgeTile.equals(rightFace.getFaceTile())|| 
+					 (this.backFace.isEqual(this.rightFace.getFaceTile(TileLocation.RIGHT_EDGE)) && this.rightFace.isEqual(this.backFace.getFaceTile(TileLocation.LEFT_EDGE)));;
+		}
+		
+		if(bottomFaceTile.equals(backFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+		   bottomFaceTile.equals(bottomTopEdgeTile))
+		{
+			isBottomFaceColor = true;
+		}	
+		else
+		{
+			isBottomFaceColor = false;
+		}
+		
+		isLeftEdgeSolved = this.backFace.isEqual(TileLocation.LEFT_EDGE) && this.rightFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isLeftEdge || (!isRightEdge && !isLeftEdgeSolved &&isBottomFaceColor))
+		{
+			System.out.println("Rotate Back Left: ");
+			
+			this.rotateBottomClockwise();
+			this.rotateRightClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateRightCounterClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateBackCounterClockwise();
+			this.rotateBottomClockwise();
+			this.rotateBackClockwise();
+			bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.TOP_EDGE);
+			this.displayRubiksCube();
+		}
+			
+		isRightEdgeSolved = this.backFace.isEqual(TileLocation.RIGHT_EDGE) && this.leftFace.isEqual(TileLocation.LEFT_EDGE); 
+		isLeftEdgeSolved = this.backFace.isEqual(TileLocation.LEFT_EDGE) && this.rightFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isRightEdgeSolved && isLeftEdgeSolved)
+			return true;
+		
+		return false;
+	}
+	private boolean solveLeftFaceMiddleLayer()
+	{
+		boolean isRightEdge = false;
+		boolean isLeftEdge = false;
+		boolean isRightEdgeSolved = false;
+		boolean isLeftEdgeSolved = false;
+		boolean isBottomFaceColor = false;
+		RubiksCubeTile bottomFaceTile = this.bottomFace.getFaceTile();
+		RubiksCubeTile bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.LEFT_EDGE);
+		
+		isRightEdgeSolved = this.leftFace.isEqual(TileLocation.RIGHT_EDGE) && this.frontFace.isEqual(TileLocation.LEFT_EDGE); 
+		isLeftEdgeSolved = this.leftFace.isEqual(TileLocation.LEFT_EDGE) && this.backFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isRightEdgeSolved && isLeftEdgeSolved)
+			return true;
+		
+		if(this.leftFace.isEqual(TileLocation.BOTTOM_EDGE))
+		{
+			isRightEdge = bottomTopEdgeTile.equals(this.frontFace.getFaceTile())|| 
+					 (this.leftFace.isEqual(this.backFace.getFaceTile(TileLocation.RIGHT_EDGE)) && this.backFace.isEqual(this.leftFace.getFaceTile(TileLocation.LEFT_EDGE)));;
+			isLeftEdge = bottomTopEdgeTile.equals(this.backFace.getFaceTile())|| 
+					 (this.leftFace.isEqual(this.frontFace.getFaceTile(TileLocation.LEFT_EDGE)) && this.frontFace.isEqual(this.leftFace.getFaceTile(TileLocation.RIGHT_EDGE)));;
+		}
+		
+		if(bottomFaceTile.equals(leftFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+		   bottomFaceTile.equals(bottomTopEdgeTile))
+		{
+			isBottomFaceColor = true;
+		}
+		else
+		{
+			isBottomFaceColor = false;
+		}
+		
+		isRightEdgeSolved = this.leftFace.isEqual(TileLocation.RIGHT_EDGE) && this.frontFace.isEqual(TileLocation.LEFT_EDGE); 
+		
+		if(isRightEdge || (!isLeftEdge && !isRightEdgeSolved && isBottomFaceColor))
+		{
+			System.out.println("Rotate Left Right: ");
+			
+			this.rotateBottomCounterClockwise();
+			this.rotateFrontCounterClockwise();
+			this.rotateBottomClockwise();
+			this.rotateFrontClockwise();
+			this.rotateBottomClockwise();
+			this.rotateLeftClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateLeftCounterClockwise();
+			bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.TOP_EDGE);
+			this.displayRubiksCube();
+		}
+		
+		if(this.leftFace.isEqual(TileLocation.BOTTOM_EDGE))
+		{
+			isRightEdge = bottomTopEdgeTile.equals(this.frontFace.getFaceTile())|| 
+					 (this.leftFace.isEqual(this.backFace.getFaceTile(TileLocation.RIGHT_EDGE)) && this.backFace.isEqual(this.leftFace.getFaceTile(TileLocation.LEFT_EDGE)));;
+			isLeftEdge = bottomTopEdgeTile.equals(this.backFace.getFaceTile())|| 
+					 (this.leftFace.isEqual(this.frontFace.getFaceTile(TileLocation.LEFT_EDGE)) && this.frontFace.isEqual(this.leftFace.getFaceTile(TileLocation.RIGHT_EDGE)));;
+		}
+		
+		if(bottomFaceTile.equals(leftFace.getFaceTile(TileLocation.BOTTOM_EDGE)) ||
+		   bottomFaceTile.equals(bottomTopEdgeTile))
+		{
+			isBottomFaceColor = true;
+		}
+		else
+		{
+			isBottomFaceColor = false;
+		}
+		
+		isLeftEdgeSolved = this.leftFace.isEqual(TileLocation.LEFT_EDGE) && this.backFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isLeftEdge || (!isRightEdge && !isLeftEdgeSolved &&isBottomFaceColor))
+		{
+			System.out.println("Rotate Left Left: ");
+			
+			this.rotateBottomClockwise();
+			this.rotateBackClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateBackCounterClockwise();
+			this.rotateBottomCounterClockwise();
+			this.rotateLeftCounterClockwise();
+			this.rotateBottomClockwise();
+			this.rotateLeftClockwise();
+			bottomTopEdgeTile = this.bottomFace.getFaceTile(TileLocation.TOP_EDGE);
+			this.displayRubiksCube();
+		}
+			
+		isRightEdgeSolved = this.leftFace.isEqual(TileLocation.RIGHT_EDGE) && this.frontFace.isEqual(TileLocation.LEFT_EDGE); 
+		isLeftEdgeSolved = this.leftFace.isEqual(TileLocation.LEFT_EDGE) && this.backFace.isEqual(TileLocation.RIGHT_EDGE);
+		
+		if(isRightEdgeSolved && isLeftEdgeSolved)
+			return true;
+		
+		return false;
+	}
 	/**
 	 * Rotate the top of the cube clockwise
 	 */
@@ -3858,15 +4197,15 @@ public class RubiksCubeThree implements RubiksCubeInterface
 		
 		topFace.rotateTilesClockwise();
 		
-		this.tileSets.put(FaceName.FRONT, frontFace.getFaceRow(row, isReverse));
-		this.tileSets.put(FaceName.RIGHT, rightFace.getFaceRow(row, isReverse));
-		this.tileSets.put(FaceName.BACK, backFace.getFaceRow(row, isReverse));
-		this.tileSets.put(FaceName.LEFT, leftFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.FRONT, this.frontFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.RIGHT, this.rightFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.BACK, this.backFace.getFaceRow(row, isReverse));
+		this.tileSets.put(FaceName.LEFT, this.leftFace.getFaceRow(row, isReverse));
 		
-		frontFace.setFaceRow(row, this.tileSets.get(FaceName.RIGHT));
-		rightFace.setFaceRow(row, this.tileSets.get(FaceName.BACK));
-		backFace.setFaceRow(row, this.tileSets.get(FaceName.LEFT));
-		leftFace.setFaceRow(row, this.tileSets.get(FaceName.FRONT));
+		this.frontFace.setFaceRow(row, this.tileSets.get(FaceName.RIGHT));
+		this.rightFace.setFaceRow(row, this.tileSets.get(FaceName.BACK));
+		this.backFace.setFaceRow(row, this.tileSets.get(FaceName.LEFT));
+		this.leftFace.setFaceRow(row, this.tileSets.get(FaceName.FRONT));
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package rubikscube.three;
+package rubikscube.standard;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -131,6 +131,11 @@ public class RubiksCubeFace
 		this.faceTiles[1][0] = topEdge;
 		
 		setFaceTilesMap();
+	}
+	
+	public boolean isEqual(RubiksCubeTile tile)
+	{
+		return this.getFaceTile(TileLocation.MIDDLE).equals(tile);
 	}
 	
 	public boolean isEqual(TileLocation tileLocation)

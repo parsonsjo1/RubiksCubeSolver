@@ -7,8 +7,10 @@ package rubikscube;
  * @author Joshua Parsons
  * 
  */
-public interface RubiksCubeInterface 
+public interface IRubiksCube 
 {	
+	public IRubiksCube createRubiksCube();
+	
 	public final int NUM_FACES = 6;
 	
 	public void shuffleRubiksCube();
