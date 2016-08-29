@@ -1,13 +1,12 @@
 /**
  * 
  */
-package rubikscube;
+package rubikscube.standard.factories;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import javax.swing.text.html.HTMLDocument.Iterator;
+import rubikscube.interfaces.IRubiksCube;
 
 /**
  * @author Joshua Parsons

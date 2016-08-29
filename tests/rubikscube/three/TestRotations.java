@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import rubikscube.IRubiksCube;
+import rubikscube.interfaces.IRubiksCube;
 import rubikscube.standard.StandardRubiksCube;
 
 /**

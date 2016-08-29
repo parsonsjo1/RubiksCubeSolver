@@ -6,16 +6,14 @@ package main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import rubikscube.IRubiksCube;
-import rubikscube.RubiksCubeFactory;
-import rubikscube.enums.RubiksCubeTypes;
 import rubikscube.exceptions.InvalidInputException;
+import rubikscube.interfaces.IRubiksCube;
 import rubikscube.standard.StandardRubiksCube;
+import rubikscube.standard.factories.RubiksCubeFactory;
 
 /**
  * @author Joshua Parsons
@@ -29,42 +27,62 @@ public class RubiksCubeSolver
 	public static void main(String[] args) 
 	{		
 		RubiksCubeFactory rubiksCubeFactory = RubiksCubeFactory.getInstance();
+		
+		/*Register different Rubiks Cubes here*/
+		//BeginnerRubiksCube.registerRubiksCube();
 		StandardRubiksCube.registerRubiksCube();
+		//AdvancedRubiksCube.registerRubiksCube();
+		//ChallengerRubiksCube.registerRubiksCube();
+		//ImpossibleRubiksCube.registerRubiksCube();
 		
 		//Get the users selected option
-		String selectedType = getUserSelection(rubiksCubeFactory);
-		System.out.println(selectedType);
-		selectedType = getUserSelection(rubiksCubeFactory);
-
-		//String selectedOption = "";
+		//String selectedType = getUserSelection(rubiksCubeFactory);
 		
-		//Create rubiks cube object
+		//Create rubiks cube object using the factory method
 		IRubiksCube rubiksCube = rubiksCubeFactory.createRubiksCube("Standard (3x3)");
+
+//		rubiksCube.display();
+//		rubiksCube.rotateFront();
+//		System.out.println();
+//		rubiksCube.display();
+//		
+//		rubiksCube.rotateBack();
+//		System.out.println();
+//		rubiksCube.display();
+//		
+//		rubiksCube.rotateDown();
+//		System.out.println();
+//		rubiksCube.display();
+//		
+//		rubiksCube.rotateLeft();
+//		System.out.println();
+//		rubiksCube.display();
 		
-		//for(int i = 0; i < 10; i++)
-		//{
-			rubiksCube.shuffleRubiksCube();
+		
+		for(int i = 0; i < 100; i++)
+		{
+			rubiksCube.shuffle();
 			
-			rubiksCube.displayRubiksCube();
+			rubiksCube.display();
 			
-			rubiksCube.solveRubiksCube();
+			rubiksCube.solve();
 			
 			System.out.println();
 			
-			rubiksCube.displayRubiksCube();
-		//}
+			rubiksCube.display();
+		}
 		
 
 	}
 	
 	/**
-	 * @return an int of the users selection
+	 * @return an String of the users selection
 	 */
 	private static String getUserSelection(RubiksCubeFactory rubiksCubeFactory)
 	{		
 		//Prompt user 
 		System.out.println("Select the type of Rubiks cube that you would like to use:\n");
-		String[] optionList = getOptions((HashMap<String, IRubiksCube>)rubiksCubeFactory.getRubiksCubeTypes());
+		String[] optionList = getOptions((Map<String, IRubiksCube>)rubiksCubeFactory.getRubiksCubeTypes());
 		long numRubiksCubeTypes = optionList.length;
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));		
@@ -116,9 +134,9 @@ public class RubiksCubeSolver
 	}
 	
 	/**
-	 * @return a string list of options for the user to choose from
+	 * @return a String[]
 	 */
-	private static String[] getOptions(HashMap<String, IRubiksCube> rubiksCubeTypes)
+	private static String[] getOptions(Map<String, IRubiksCube> rubiksCubeTypes)
 	{
 		String[] optionList = new String[rubiksCubeTypes.size()];
 		int counter = 0;

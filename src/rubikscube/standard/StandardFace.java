@@ -5,206 +5,227 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import rubikscube.Cubie;
 import rubikscube.enums.Direction;
 import rubikscube.enums.FaceName;
 import rubikscube.enums.TileColor;
-import rubikscube.enums.TileLocation;
+import rubikscube.interfaces.IRubiksCubeFace;
+import rubikscube.standard.enums.CubieLocation;
 
 /**
  * The faces of a Rubiks Cube
  * @author Joshua Parsons
  */
-public class RubiksCubeFace 
+public class StandardFace implements IRubiksCubeFace
 {
 	private FaceName faceName;
-	private int numRows;
-	private int numCols;
-	private RubiksCubeTile[][] faceTiles;
-	private Map<TileLocation, RubiksCubeTile> faceTilesMap;
-	private Map<Direction, List<FaceName>> rotationMap;
+	private final int NUM_ROWS =  3;
+	private final int NUM_COLUMNS = 3;
+	private Cubie[][] cubies;
+//	private Map<TileLocation, Cubie> cubiesMap;
+//	private Map<Direction, List<FaceName>> rotationMap;
 	
 	/**
 	 * RubiksCubeFace Constructor
 	 * @param size
 	 * @param faceName
 	 */
-	public RubiksCubeFace(int numRows, int numCols, FaceName faceName, TileColor tileColor)
+	public StandardFace(FaceName faceName, String color)
 	{
 		setFaceName(faceName);
-		setNumRows(numRows);
-		setNumCols(numCols);
-		setFaceTiles(tileColor);
-		setFaceTilesMap(new EnumMap<TileLocation, RubiksCubeTile>(TileLocation.class));
+		setCubies(color);
+		//setcubiesMap(new EnumMap<TileLocation, Cubie>(TileLocation.class));
 		//setRotationMap();
 	}
 	
-	public TileLocation findCornerLocation(TileColor tileColor)
+//	public TileLocation findCornerLocation(TileColor tileColor)
+//	{
+//		if(this.isTileColor(TileLocation.TOP_LEFT_CORNER, TileColor.WHITE))
+//			return TileLocation.TOP_LEFT_CORNER;
+//		if(this.isTileColor(TileLocation.TOP_RIGHT_CORNER, TileColor.WHITE))
+//			return TileLocation.TOP_RIGHT_CORNER;
+//		if(this.isTileColor(TileLocation.BOTTOM_LEFT_CORNER, TileColor.WHITE))
+//			return TileLocation.BOTTOM_LEFT_CORNER;
+//		if(this.isTileColor(TileLocation.BOTTOM_RIGHT_CORNER, TileColor.WHITE))
+//			return TileLocation.BOTTOM_RIGHT_CORNER;
+//		
+//		return null;
+//	}
+	
+	public CubieLocation findEdge(String color)
 	{
-		if(this.isTileColor(TileLocation.TOP_LEFT_CORNER, TileColor.WHITE))
-			return TileLocation.TOP_LEFT_CORNER;
-		if(this.isTileColor(TileLocation.TOP_RIGHT_CORNER, TileColor.WHITE))
-			return TileLocation.TOP_RIGHT_CORNER;
-		if(this.isTileColor(TileLocation.BOTTOM_LEFT_CORNER, TileColor.WHITE))
-			return TileLocation.BOTTOM_LEFT_CORNER;
-		if(this.isTileColor(TileLocation.BOTTOM_RIGHT_CORNER, TileColor.WHITE))
-			return TileLocation.BOTTOM_RIGHT_CORNER;
+		String topEdgeColor = this.getColor(CubieLocation.TOP_EDGE);
+		String leftEdgeColor = this.getColor(CubieLocation.LEFT_EDGE);;
+		String bottomEdgeColor = this.getColor(CubieLocation.BOTTOM_EDGE);;
+		String rightEdgeColor = this.getColor(CubieLocation.RIGHT_EDGE);;
+		
+		if(topEdgeColor.equals(color))
+			return CubieLocation.TOP_EDGE;
+		if(leftEdgeColor.equals(color))
+			return CubieLocation.LEFT_EDGE;
+		if(bottomEdgeColor.equals(color))
+			return CubieLocation.BOTTOM_EDGE;
+		if(rightEdgeColor.equals(color))
+			return CubieLocation.RIGHT_EDGE;
 		
 		return null;
 	}
 	
-	public TileLocation findEdgeLocation(TileColor tileColor)
+	public String getColor()
 	{
-		if(this.isTileColor(TileLocation.TOP_EDGE, TileColor.WHITE))
-			return TileLocation.TOP_EDGE;
-		if(this.isTileColor(TileLocation.RIGHT_EDGE, TileColor.WHITE))
-			return TileLocation.RIGHT_EDGE;
-		if(this.isTileColor(TileLocation.BOTTOM_EDGE, TileColor.WHITE))
-			return TileLocation.BOTTOM_EDGE;
-		if(this.isTileColor(TileLocation.LEFT_EDGE, TileColor.WHITE))
-			return TileLocation.LEFT_EDGE;
-		
-		return null;
+		return this.getCubie(1, 1).getColor();
 	}
 	
-	public TileColor getTileColor()
+	public String getColor(int row, int col)
 	{
-		return this.getFaceTile(TileLocation.MIDDLE).getTileColor();
+		return this.cubies[row][col].getColor();
 	}
 	
-	public TileColor getTileColor(TileLocation tileLocation)
+	public String getColor(CubieLocation cubieLocation)
 	{
-		return this.getFaceTile(tileLocation).getTileColor();
+		return this.getCubie(cubieLocation).getColor();
 	}
-	
-	public boolean isTileColor(TileLocation tileLocation, TileColor tileColor)
-	{
-		return this.faceTilesMap.get(tileLocation).isTileColor(tileColor);
-	}
+//	
+//	public boolean isTileColor(TileLocation tileLocation, String tileColor)
+//	{
+//		return this.cubiesMap.get(tileLocation).getColor().equals(tileColor);
+//	}
 	
 	/**
 	 * Rotate the face tiles in the clockwise direction
 	 */
-	public void rotateTilesClockwise()
+	public void rotate()
 	{
-		RubiksCubeTile topLeftCorner = this.faceTiles[0][0];
-		RubiksCubeTile topEdge = this.faceTiles[0][1];
-		RubiksCubeTile topRightCorner = this.faceTiles[0][2];
-		RubiksCubeTile rightEdge = this.faceTiles[1][2];
-		RubiksCubeTile bottomRightCorner = this.faceTiles[2][2];
-		RubiksCubeTile bottomEdge = this.faceTiles[2][1];
-		RubiksCubeTile bottomLeftCorner = this.faceTiles[2][0];
-		RubiksCubeTile leftEdge = this.faceTiles[1][0];
+		Cubie topLeftCorner = this.cubies[0][0];
+		Cubie topEdge = this.cubies[0][1];
+		Cubie topRightCorner = this.cubies[0][2];
+		Cubie rightEdge = this.cubies[1][2];
+		Cubie bottomRightCorner = this.cubies[2][2];
+		Cubie bottomEdge = this.cubies[2][1];
+		Cubie bottomLeftCorner = this.cubies[2][0];
+		Cubie leftEdge = this.cubies[1][0];
 		
-		this.faceTiles[0][0] = bottomLeftCorner;
-		this.faceTiles[0][1] = leftEdge;
-		this.faceTiles[0][2] = topLeftCorner;
-		this.faceTiles[1][2] = topEdge;
-		this.faceTiles[2][2] = topRightCorner;
-		this.faceTiles[2][1] = rightEdge;
-		this.faceTiles[2][0] = bottomRightCorner;
-		this.faceTiles[1][0] = bottomEdge;
+		this.cubies[0][0] = bottomLeftCorner;
+		this.cubies[0][1] = leftEdge;
+		this.cubies[0][2] = topLeftCorner;
+		this.cubies[1][2] = topEdge;
+		this.cubies[2][2] = topRightCorner;
+		this.cubies[2][1] = rightEdge;
+		this.cubies[2][0] = bottomRightCorner;
+		this.cubies[1][0] = bottomEdge;
 		
-		setFaceTilesMap();
+		//setcubiesMap();
 	}
 	
 	/**
 	 * Rotate the face tiles in the counterclockwise direction
 	 */
-	public void rotateTilesCounterClockwise()
+	public void rotateInverse()
 	{
-		RubiksCubeTile topLeftCorner = this.faceTiles[0][0];
-		RubiksCubeTile topEdge = this.faceTiles[0][1];
-		RubiksCubeTile topRightCorner = this.faceTiles[0][2];
-		RubiksCubeTile rightEdge = this.faceTiles[1][2];
-		RubiksCubeTile bottomRightCorner = this.faceTiles[2][2];
-		RubiksCubeTile bottomEdge = this.faceTiles[2][1];
-		RubiksCubeTile bottomLeftCorner = this.faceTiles[2][0];
-		RubiksCubeTile leftEdge = this.faceTiles[1][0];
+		Cubie topLeftCorner = this.cubies[0][0];
+		Cubie topEdge = this.cubies[0][1];
+		Cubie topRightCorner = this.cubies[0][2];
+		Cubie rightEdge = this.cubies[1][2];
+		Cubie bottomRightCorner = this.cubies[2][2];
+		Cubie bottomEdge = this.cubies[2][1];
+		Cubie bottomLeftCorner = this.cubies[2][0];
+		Cubie leftEdge = this.cubies[1][0];
 		
-		this.faceTiles[0][0] = topRightCorner;
-		this.faceTiles[0][1] = rightEdge;
-		this.faceTiles[0][2] = bottomRightCorner;
-		this.faceTiles[1][2] = bottomEdge;
-		this.faceTiles[2][2] = bottomLeftCorner;
-		this.faceTiles[2][1] = leftEdge;
-		this.faceTiles[2][0] = topLeftCorner;
-		this.faceTiles[1][0] = topEdge;
+		this.cubies[0][0] = topRightCorner;
+		this.cubies[0][1] = rightEdge;
+		this.cubies[0][2] = bottomRightCorner;
+		this.cubies[1][2] = bottomEdge;
+		this.cubies[2][2] = bottomLeftCorner;
+		this.cubies[2][1] = leftEdge;
+		this.cubies[2][0] = topLeftCorner;
+		this.cubies[1][0] = topEdge;
 		
-		setFaceTilesMap();
+		//setcubiesMap();
 	}
 	
-	public boolean isEqual(RubiksCubeTile tile)
-	{
-		return this.getFaceTile(TileLocation.MIDDLE).equals(tile);
-	}
+//	public boolean isEqual(Cubie tile)
+//	{
+//		return this.getFaceTile(TileLocation.MIDDLE).equals(tile);
+//	}
+//	
+//	public boolean isEqual(TileLocation tileLocation)
+//	{
+//		return this.getFaceTile(TileLocation.MIDDLE).equals(this.getFaceTile(tileLocation));
+//	}
+//	
+//	public boolean isEqual(TileLocation tileLocation1, TileLocation tileLocation2)
+//	{
+//		return this.getFaceTile(tileLocation1).equals(this.getFaceTile(tileLocation2));
+//	}
+//	
+//	public boolean isEqual(TileLocation tileLocation, Cubie otherTile)
+//	{
+//		return this.getFaceTile(tileLocation).equals(otherTile);
+//	}
 	
-	public boolean isEqual(TileLocation tileLocation)
+	/*
+	 * Return the requested cubie
+	 */
+	public Cubie getCubie(int row, int col)
 	{
-		return this.getFaceTile(TileLocation.MIDDLE).equals(this.getFaceTile(tileLocation));
-	}
-	
-	public boolean isEqual(TileLocation tileLocation1, TileLocation tileLocation2)
-	{
-		return this.getFaceTile(tileLocation1).equals(this.getFaceTile(tileLocation2));
-	}
-	
-	public boolean isEqual(TileLocation tileLocation, RubiksCubeTile otherTile)
-	{
-		return this.getFaceTile(tileLocation).equals(otherTile);
+		return this.cubies[row][col];
 	}
 	
 	/*
-	 * Return the requested face tile
+	 * Return the requested cubie
 	 */
-	public RubiksCubeTile getFaceTile(int row, int col)
+	public Cubie getCubie(CubieLocation cubieLocation)
 	{
-		return this.faceTiles[row][col];
+			switch(cubieLocation)
+			{
+			case MIDDLE:
+				return this.cubies[1][1];
+			case BOTTOM_EDGE:
+				return this.cubies[2][1];
+			case BOTTOM_LEFT_CORNER:
+				return this.cubies[2][0];
+			case BOTTOM_RIGHT_CORNER:
+				return this.cubies[2][2];
+			case LEFT_EDGE:
+				return this.cubies[1][0];
+			case RIGHT_EDGE:
+				return this.cubies[1][2];
+			case TOP_EDGE:
+				return this.cubies[0][1];
+			case TOP_LEFT_CORNER:
+				return this.cubies[0][0];
+			case TOP_RIGHT_CORNER:
+				return this.cubies[0][2];
+			default:
+				return null;
+			}
 	}
 	
 	/**
-	 * @return the faceTiles
+	 * @return the cubies
 	 */
-	public RubiksCubeTile[][] getFaceTiles() 
+	public Cubie[][] getCubies() 
 	{
-		return this.faceTiles;
+		return this.cubies;
 	}
 	
 	/**
 	 * 
 	 * @param size
 	 */
-	public void setFaceTiles(TileColor tileColor)
+	public void setCubies(String color)
 	{
-		this.faceTiles = new RubiksCubeTile[numRows][numCols];
+		this.cubies = new Cubie[this.NUM_ROWS][this.NUM_COLUMNS];
 		
-		for(int row = 0; row < numRows; row++)
+		for(int row = 0; row < this.NUM_ROWS; row++)
 		{
-			for(int col = 0; col < numCols; col++)
+			for(int col = 0; col < this.NUM_COLUMNS; col++)
 			{
-				RubiksCubeTile currentTile = new RubiksCubeTile(tileColor);				
-				this.faceTiles[row][col] = currentTile;
+				CubieLocation location = CubieLocation.getTileLocation(row, col);
+				Cubie currentTile = new Cubie(color, location);				
+				this.cubies[row][col] = currentTile;
 			}
 		}	
-	}
-
-	public int getNumRows()
-	{
-		return numRows;
-	}
-
-	public void setNumRows(int numRows)
-	{
-		this.numRows = numRows;
-	}
-
-	public int getNumCols()
-	{
-		return numCols;
-	}
-
-	public void setNumCols(int numCols)
-	{
-		this.numCols = numCols;
 	}
 
 	public void setFaceName(FaceName faceName)
@@ -217,70 +238,70 @@ public class RubiksCubeFace
 		return this.faceName;
 	}
 	
-	public RubiksCubeTile[] getFaceCol(int col, boolean isReverse)
+	public Cubie[] getFaceCol(int col, boolean isReverse)
 	{
-		RubiksCubeTile[] colSet = new RubiksCubeTile[this.faceTiles.length];
+		Cubie[] colSet = new Cubie[this.cubies.length];
 		
 		if(isReverse)
 		{
 			int counter = 0;
-			for(int row = faceTiles.length - 1; row >= 0; row--)
+			for(int row = cubies.length - 1; row >= 0; row--)
 			{
-				colSet[counter++] = this.faceTiles[row][col];
+				colSet[counter++] = this.cubies[row][col];
 			}
 		}
 		else
 		{
-			for(int row = 0; row < this.faceTiles.length; row++)
+			for(int row = 0; row < this.cubies.length; row++)
 			{
-				colSet[row] = this.faceTiles[row][col];
+				colSet[row] = this.cubies[row][col];
 			}
 		}
 		
 		return colSet;
 	}
 	
-	public RubiksCubeTile[] getFaceRow(int row, boolean isReverse)
+	public Cubie[] getFaceRow(int row, boolean isReverse)
 	{
-		RubiksCubeTile[] rowSet = new RubiksCubeTile[this.faceTiles.length];
+		Cubie[] rowSet = new Cubie[this.cubies.length];
 		
 		if(isReverse)
 		{
 			int counter = 0;
-			for(int col = this.faceTiles.length - 1; col >= 0; col--)
+			for(int col = this.cubies.length - 1; col >= 0; col--)
 			{
-				rowSet[counter++] = this.faceTiles[row][col];
+				rowSet[counter++] = this.cubies[row][col];
 			}
 		}
 		else
 		{
-			for(int col = 0; col < this.faceTiles.length; col++)
+			for(int col = 0; col < this.cubies.length; col++)
 			{
-				rowSet[col] = this.faceTiles[row][col];
+				rowSet[col] = this.cubies[row][col];
 			}
 		}
 		
 		return rowSet;
 	}
 	
-	public void setFaceCol(int col, RubiksCubeTile[] colSet)
+	public void setFaceCol(int col, Cubie[] colSet)
 	{
-		for(int row = 0; row < this.faceTiles.length; row++)
+		for(int row = 0; row < this.cubies.length; row++)
 		{
-			this.faceTiles[row][col] = colSet[row];
+			this.cubies[row][col] = colSet[row];
 		}
 		
-		setFaceTilesMap();
+		//setcubiesMap();
 	}
 	
-	public void setFaceRow(int row, RubiksCubeTile[] rowSet)
+	public void setFaceRow(int row, Cubie[] rowSet)
 	{
-		for(int col = 0; col < this.faceTiles.length; col++)
+		for(int col = 0; col < this.cubies.length; col++)
 		{
-			this.faceTiles[row][col] = rowSet[col];
+			this.cubies[row][col] = rowSet[col];
 		}
 		
-		setFaceTilesMap();
+		//setcubiesMap();
 	}
 	
 	/**
@@ -288,41 +309,41 @@ public class RubiksCubeFace
 	 * @param direction
 	 * @return FaceName
 	 */
-	public List<FaceName> getRotationMap(Direction direction)
-	{
-		return this.rotationMap.get(direction);
-	}
+//	public List<FaceName> getRotationMap(Direction direction)
+//	{
+//		return this.rotationMap.get(direction);
+//	}
+//	
+//	public Cubie getFaceTile()
+//	{
+//		return this.cubiesMap.get(TileLocation.MIDDLE);
+//	}
+//	
+//	public Cubie getFaceTile(TileLocation tileLocation)
+//	{
+//		return this.cubiesMap.get(tileLocation);
+//	}
+//	
+//	private void setcubiesMap(EnumMap<TileLocation, Cubie> cubiesMap)
+//	{
+//		this.cubiesMap = new EnumMap<TileLocation, Cubie>(TileLocation.class);
+//		
+//	}
 	
-	public RubiksCubeTile getFaceTile()
-	{
-		return this.faceTilesMap.get(TileLocation.MIDDLE);
-	}
-	
-	public RubiksCubeTile getFaceTile(TileLocation tileLocation)
-	{
-		return this.faceTilesMap.get(tileLocation);
-	}
-	
-	private void setFaceTilesMap(EnumMap<TileLocation, RubiksCubeTile> faceTilesMap)
-	{
-		this.faceTilesMap = new EnumMap<TileLocation, RubiksCubeTile>(TileLocation.class);
-		
-	}
-	
-	private void setFaceTilesMap()
-	{	
-		for(int row = 0; row < numRows; row++)
-		{
-			for(int col = 0; col < numCols; col++)
-			{
-				RubiksCubeTile currentTile = this.faceTiles[row][col];
-				TileLocation currentTileLocation = TileLocation.getTileLocation(row, col);
-				
-				this.faceTiles[row][col] = currentTile;
-				this.faceTilesMap.put(currentTileLocation, currentTile);
-			}
-		}
-	}
+//	private void setcubiesMap()
+//	{	
+//		for(int row = 0; row < this.NUM_ROWS; row++)
+//		{
+//			for(int col = 0; col < this.NUM_COLUMNS; col++)
+//			{
+//				Cubie currentTile = this.cubies[row][col];
+//				TileLocation currentTileLocation = TileLocation.getTileLocation(row, col);
+//				
+//				this.cubies[row][col] = currentTile;
+//				this.cubiesMap.put(currentTileLocation, currentTile);
+//			}
+//		}
+//	}
 	
 //	/**
 //	 * Set adjacent faces for the current face
@@ -522,11 +543,11 @@ public class RubiksCubeFace
 	{
 		StringBuilder faceSB = new StringBuilder();
 		
-		for(int row = 0; row < this.numRows; row++)
+		for(int row = 0; row < this.NUM_ROWS; row++)
 		{
-			for(int col = 0; col < this.numCols; col++)
+			for(int col = 0; col < this.NUM_COLUMNS; col++)
 			{
-				faceSB.append(this.faceTiles[row][col].getTileColor() + " ");
+				faceSB.append(this.cubies[row][col].getColor() + " ");
 			}
 			if(row != 2)
 				faceSB.append("\n");

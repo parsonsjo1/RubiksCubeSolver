@@ -1,17 +1,17 @@
 /**
  * 
  */
-package rubikscube.enums;
+package rubikscube.standard.enums;
 
 /**
  * @author Joshua Parsons
  * 
  */
-public enum TileLocation 
+public enum CubieLocation 
 {
 	MIDDLE, TOP_LEFT_CORNER, TOP_EDGE, TOP_RIGHT_CORNER, RIGHT_EDGE, BOTTOM_RIGHT_CORNER, BOTTOM_EDGE, BOTTOM_LEFT_CORNER, LEFT_EDGE;
 	
-	public static TileLocation getTileLocation(int row, int col)
+	public static CubieLocation getTileLocation(int row, int col)
 	{
 		if(row == 0 && col == 0)
 			return TOP_LEFT_CORNER;
